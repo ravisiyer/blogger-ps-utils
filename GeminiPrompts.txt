@@ -1,0 +1,21 @@
+2 Mar 2026
+Following are the prompts provided to Gemini to make changes to the scripts.
+
+Changes to be made to postsize.ps1
+1) When we used the command:
+.\Audit-AllPosts.ps1 -All | Tee-Object -FilePath "FullBlogAudit.txt"
+	The output file FullBlogAudit.txt was not generated as postsize.ps1 (invoked from Audit-AllPosts.ps1) uses Write-Host. I believe we have to change that to Write-Output for Tee to work.
+2) When postsize.ps1 reports "Size: $sizeKB KB"
+	it should additionally say whether this figure is based on RawContentLength field OR whether it is a byte count of the content string.
+3) Add documentation comments for the script
+
+----------------------
+
+Changes to be made to postsInListSize.ps1
+1) Take in a parameter for list of posts filename. If the parameter is not specified, used default of PostsLists.html (in current directory)
+2) Change Write-Host to Write-Output
+3) Add a Write-Output entry having timestamp at start of run and another at end of run. Also Write-Output the duration of the run.
+4) Change the word 'Audit' in messages to something more in line with filename and function of showing the size of posts in the list.
+5) Add documentation comments for the script
+
+----------------------

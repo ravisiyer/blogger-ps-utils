@@ -26,7 +26,8 @@ Run the script with a single URL to see the size and the calculation method used
 ```
 Console output:
 ```
-URL:    https://raviswdev.blogspot.com/2026/03/fixing-gemini-chat-to-blogger-compose.html                                 Size:   177.29 KB (Calculated via RawContentLength header)
+URL:    https://raviswdev.blogspot.com/2026/03/fixing-gemini-chat-to-blogger-compose.html
+Size:   177.29 KB (Calculated via RawContentLength header)
 ```
 
 #### 2. Logging to a File (Pipeline Support)
