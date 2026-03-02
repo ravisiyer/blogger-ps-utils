@@ -19,3 +19,9 @@ Changes to be made to postsInListSize.ps1
 5) Add documentation comments for the script
 
 ----------------------
+I made a minor change - PostsLists.html default filename to PostsList.html
+...
+Now https://raviswdev.blogspot.com is one of my Blogger blogs.
+ravisiyer.blogspot.com is another Blogger blog of mine. I have 3 or 4 more such Blogger blogs.
+So I would like the script to take the blog home url (or whatever the term is) as a parameter with the current blog url as the default value. That will make this script work for any Blogger blog that provides the PostsList.html file with expected data in the expected format. Can you do that? Will it be difficult to do?
+

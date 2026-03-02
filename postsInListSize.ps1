@@ -1,21 +1,26 @@
 <#
 .SYNOPSIS
     Iterates through a list of blog posts and measures the size of each.
-    Part of the Blogger CSS Sanitization workflow.
-    URL: https://raviswdev.blogspot.com/2026/03/fixing-gemini-chat-to-blogger-compose.html
 
 .DESCRIPTION
-    Parses an HTML file containing a list of blog posts, extracts the URLs, 
-    and invokes postsize.ps1 to report the payload size of each.
+    Parses an HTML file containing a list of blog posts, extracts URLs for a 
+    specific blog domain, and invokes postsize.ps1 to report the payload size.
+
+.PARAMETER BlogBaseUrl
+    The base URL of the Blogger blog (e.g., https://ravisiyer.blogspot.com).
+    Default: https://raviswdev.blogspot.com
 
 .PARAMETER PostListFile
-    The HTML file containing the post list (Default: PostsLists.html).
+    The HTML file containing the post list (Default: PostsList.html).
 
 .PARAMETER All
     If present, scans all posts. Otherwise, performs a 10-post test run.
 #>
 
 param (
+    [Parameter(Mandatory=$false)]
+    [string]$BlogBaseUrl = "https://raviswdev.blogspot.com",
+
     [Parameter(Mandatory=$false)]
     [string]$PostListFile = "PostsList.html",
 
@@ -25,6 +30,7 @@ param (
 
 $startTime = Get-Date
 Write-Output "--- Starting Post Size Scan: $startTime ---"
+Write-Output "Target Blog: $BlogBaseUrl"
 
 # 1. Validation
 if (-not (Test-Path $PostListFile)) {
@@ -32,12 +38,21 @@ if (-not (Test-Path $PostListFile)) {
     return
 }
 
+# 2. Dynamic Regex Pattern
+# [Regex]::Escape ensures characters like '.' in the URL don't break the pattern
+$escapedBaseUrl = [Regex]::Escape($BlogBaseUrl)
+$urlPattern = "class=`"post-item`">.*?href=`"($escapedBaseUrl/.*?\.html)`""
+
 $content = Get-Content $PostListFile -Raw
-$urlPattern = 'class="post-item">.*?href="(https://raviswdev\.blogspot\.com/.*?\.html)"'
 $allMatches = [regex]::Matches($content, $urlPattern)
 $totalFound = $allMatches.Count
 
-# 2. Scope Logic
+if ($totalFound -eq 0) {
+    Write-Output "Warning: No posts found matching $BlogBaseUrl in $PostListFile"
+    return
+}
+
+# 3. Scope Logic
 if ($All.IsPresent) {
     $targetMatches = $allMatches
     Write-Output "--- FULL SCAN MODE: Processing all $totalFound posts ---"
@@ -48,23 +63,18 @@ else {
     Write-Output "Tip: Use '-All' to scan every post in the list."
 }
 
-# 3. Execution Loop
+# 4. Execution Loop
 $count = 1
 foreach ($match in $targetMatches) {
     $url = $match.Groups[1].Value
-    
-    # Progress bar remains Write-Progress as it doesn't affect the text stream
     Write-Progress -Activity "Scanning Post Sizes" -Status "Checking [$count/$($targetMatches.Count)]: $url" -PercentComplete (($count / $targetMatches.Count) * 100)
     
-    # Invoke the individual size script
     .\postsize.ps1 -PostUrl $url
-    
     $count++
 }
 
 $endTime = Get-Date
 $duration = $endTime - $startTime
-
 Write-Output "`n--- Scan Complete ---"
 Write-Output "Finished at: $endTime"
 Write-Output "Total Duration: $($duration.Minutes)m $($duration.Seconds)s"
