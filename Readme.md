@@ -9,7 +9,9 @@ The scripts are:
 1. [postsize.ps1](#postsizeps1): Measures the size of a single Blogger post given its URL.
 2. [postsInListSize.ps1](#postsinlistsizeps1): Parses a local HTML file containing a list of Blogger post URLs (in a particular format) and invokes `postsize.ps1` for each URL to generate a comprehensive report of sizes for all posts in the list.
 
-The section [Scan Data Processing and Payload Analysis](#scan-data-processing-and-payload-analysis) details the steps taken to transform the comprehensive report (raw scan output) of postsInListSize.ps1 for one particular Blogger blog into an Excel workbook with one sheet having sorted list of posts in descending order of post size.
+The section [Scan Data Processing and Payload Analysis](#scan-data-processing-and-payload-analysis) details the steps taken to transform the comprehensive report (raw scan output) of postsInListSize.ps1 for one particular Blogger blog into an Excel workbook with one sheet having sorted list of posts in descending order of post size. But these steps were quite cumbersome and time-consuming.
+
+The section [Simpler Alternatives to Create Excel Spreadsheet from Raw Scan Output](#simpler-alternatives-to-create-excel-spreadsheet-from-raw-scan-output) gives some suggestion(s) for doing the above task in a simpler way.
 
 ---
 
@@ -129,9 +131,19 @@ The script uses a regular expression to find `post-item` classes within your loc
 
 ## Scan Data Processing and Payload Analysis
 
-*`Following account till subsection '6. To Do If Needed' is Gemini provided draft modified by me. User is me. This procedure turned out to be quite cumbersome and time-consuming. Also see subsection '7. Simpler Alternative to Create Excel Spreadsheet from Raw Scan Output'`* 
+Initial prompt given to Gemini for this task: 
 
-This section details the steps taken by the user to transform the raw scan output into a structured, actionable data set.
+`I uploaded file: "2026-03-02 17-40-20PostsInListSizeReport.txt" which is the output file of the -All run for default blog. Can you create an Excel or Google Sheets sheet - your choice - which will convert the output file to a spreadsheet with two columns for each file (I meant post) - URL and size. The size column can omit the '(Calculated via RawContentLength header)' part.`
+
+Note that, IFIRC, I later renamed "2026-03-02 17-40-20PostsInListSizeReport.txt" to "2026-03-02 17-40-20-Orig-PostsInListSizeReport.txt".
+
+Gemini did not create an Excel or Google Sheets sheet. Neither did it provide me a .csv or .md file to download. This seems to be a limitation of Gemini chat even with 'Google AI Pro' plan. Instead Gemini provided me a very long Markdown table with requested data as part of its response and then asked me to insert that data into Google Sheets. 
+
+Using Gemini guidance, I was able to correctly get the data into separate columns in Google Sheets, remove markdown code for URL and delete unwanted blank lines. That procedure turned out to be quite cumbersome and time-consuming. It is given below in rest of this section, and is a Gemini provided draft modified by me. In it, the 'User' is me.
+
+Also see the next section [Simpler Alternatives to Create Excel Spreadsheet from Raw Scan Output](#simpler-alternatives-to-create-excel-spreadsheet-from-raw-scan-output).
+
+Given below are the steps taken by the user to transform the raw scan output into a structured, actionable data set.
 
 ### 1. Data Transformation and Formatting
 
@@ -179,21 +191,26 @@ This section details the steps taken by the user to transform the raw scan outpu
 ### 5. Template Overhead Analysis
 
 * The user performed a comparative analysis using the lowest size entry found in the Scan (**109.28 KB**).
-* By running a separate [scrape-blogger-post](https://github.com/ravisiyer/scrape-blogger-post) utility on that post, it was determined the actual user-created post content in Blogger was only **2 KB**.
-* This experiment allowed the user to calculate that the fixed overhead for the blog template (headers, footers, and CSS) is approximately **107 KB** per post.
-* This benchmark enables the user to determine that a 160 KB post contains roughly 53 KB of actual user-created post content payload.
+* By running a separate [scrape-blogger-post](https://github.com/ravisiyer/scrape-blogger-post) utility on that post, it was determined the actual user-created post content in Blogger was only **1.82 KB** (size on disk for output file is 4 KB).
+* This experiment allowed the user to calculate that the fixed overhead for the blog template (headers, footers, and CSS) is approximately **107 KB** per post (109.28 - 1.82 = 107.46).
+* A later comparison for a recent post: https://raviswdev.blogspot.com/2026/03/identifying-blogger-blog-posts-with.html gives this data:
+  - `postsize.ps1` output: Size:   111.92 KB (Calculated via RawContentLength header)
+  - `scrape-blogger-post` output file size for the same post: 3.48 KB (size on disk is 4 KB) 
+  - So the template overhead is 108.44 KB for this recent post.
+* This benchmark enables the user to determine that a 160 KB post would probably contain around 51 to 53 KB of actual user-created post content payload.
 
 ### 6. To Do If Needed
 
 * A mechanism should be explored for `postsize.ps1` to return explicit signals (such as exit codes) to the caller when errors occur.
 * The calling script should then be updated to utilize these signals to provide a final summary of successful versus failed measurements at the end of a run.
 
-### 7. Simpler Alternative to Create Excel spreadsheet from Raw Scan Output
-  *`This subsection is written by me and not drafted by Gemini.`*
+## Simpler Alternatives to Create Excel spreadsheet from Raw Scan Output
+  *`Note that this section is written by me and not drafted by Gemini.`*
   * I had thought that Gemini in my 'Google AI Pro' plan may have the ability to create an Excel or Google Sheets spreadsheet from a raw data text file that I provided. But Gemini was not able to do that. On asking about it, Gemini said, "No Direct File Downloads: Currently, the assistant cannot generate a physical .md or .csv file for the user to download directly to a hard drive." It is possible that Google Colab and other Google AI tools may not have the same limitation.
   * Where Gemini does a good or reasonable job is in providing scripts that do conversion which I run rather than Gemini doing the conversion itself.
   * So in future, I could ask Gemini or some other Google AI tool to provide me a nodejs script or a powershell script  which will take a scan report file like `2026-03-02 17-40-20PostsInListSizeReport.txt` as input and generate the URL and Size pair CSV file which can then be easily imported into Excel or Google Sheets.
-  * This time around as I have already gone through the above cumbersome process till step 6 and have got the final Excel spreadsheet that I wanted, I don't want to invest further time in this matter.
+  * Another possibility is to modify postsize.ps1 to generate the output in a URL and Size pair CSV format suitable for direct import into Excel.
+  * This time around as I have already gone through the cumbersome process described in above section and have got the final Excel spreadsheet that I wanted, I don't want to invest further time in this matter.
 
 ---
 
