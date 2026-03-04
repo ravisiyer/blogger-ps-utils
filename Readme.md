@@ -13,6 +13,10 @@ The section [Scan Data Processing and Payload Analysis](#scan-data-processing-an
 
 The section [Simpler Alternatives to Create Excel Spreadsheet from Raw Scan Output](#simpler-alternatives-to-create-excel-spreadsheet-from-raw-scan-output) gives some suggestion(s) for doing the above task in a simpler way.
 
+A separate document [checkPostBloat.md](./checkPostBloat.md) covers [checkPostBloat.ps1](./checkPostBloat.ps1) script which detects ChatGPT and Dark Reader CSS bloat  in a live blog post URL.
+
+The [Get-XlsxBlobStorage.ps1](./Get-XlsxBlobStorage.ps1) script helps to understand how much space Excel files were consuming across repository history. The background for this script is covered in my blog post [Git is not suitable for managing versions of Excel and Word files](https://raviswdev.blogspot.com/2026/03/git-is-not-suitable-for-managing.html). This Get-XlsxBlobStorage.ps1 script is not expected to be used further for this project's work but is being retained just in case it is useful for some other project or perhaps for this project itself in future.
+
 ---
 
 ## postsize.ps1
