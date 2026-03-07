@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head><title>Pre Fragments</title></head>
+<body>
+<pre class="overflow-visible!" data-end="614" data-start="555"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre!">https://moodle.example.com/course/view.php?<span class="hljs-built_in">id</span>=123
+</code></div></div></pre>
+<hr>
+<pre class="overflow-visible!" data-end="1612" data-start="1448"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-json"><span class="hljs-punctuation">[</span>
+  <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"fullname"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Physics 101"</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"shortname"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"PHYS101"</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"summary"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Introductory physics"</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"startdate"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1724895600</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">]</span>
+</code></div></div></pre>
+<hr>
+<pre class="overflow-visible!" data-end="1404" data-start="1219"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre!"><span class="hljs-symbol">https:</span>/<span class="hljs-regexp">/moodle.example.com/webservice</span><span class="hljs-regexp">/rest/server</span>.php
+  <span class="hljs-string">?w</span>stoken=abc123
+  &amp;wsfunction=core_user_get_users_by_field
+  &amp;field=username
+  &amp;values[<span class="hljs-number">0</span>]=john
+  &amp;moodlewsrestformat=json
+</code></div></div></pre>
+<hr>
+<pre class="overflow-visible!" data-end="788" data-start="618"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-php"><span class="hljs-function"><span class="hljs-keyword">function</span></span> <span class="hljs-title">add</span>(<span class="hljs-params"><span class="hljs-variable">$a</span></span>, <span class="hljs-variable">$b</span>) {
+  <span class="hljs-keyword">return</span> <span class="hljs-variable">$a</span> + <span class="hljs-variable">$b</span>;
+}
+
+<span class="hljs-variable">$server</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">SoapServer</span>(<span class="hljs-literal">null</span>, [<span class="hljs-string">'uri'</span> =&gt; <span class="hljs-string">"http://localhost/soap"</span>]);
+<span class="hljs-variable">$server</span>-&gt;<span class="hljs-title function_ invoke__">addFunction</span>(<span class="hljs-string">"add"</span>);
+<span class="hljs-variable">$server</span>-&gt;<span class="hljs-title function_ invoke__">handle</span>();
+</code></div></div></pre>
+<hr>
+<pre class="overflow-visible!" data-end="1271" data-start="1089"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-php"><span class="hljs-keyword">if</span> (<span class="hljs-variable">$_SERVER</span>[<span class="hljs-string">'REQUEST_METHOD'</span>] === <span class="hljs-string">'GET'</span> &amp;&amp; <span class="hljs-variable">$_GET</span>[<span class="hljs-string">'action'</span>] === <span class="hljs-string">'sum'</span>) {
+  <span class="hljs-variable">$a</span> = <span class="hljs-title function_ invoke__">intval</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">'a'</span>]);
+  <span class="hljs-variable">$b</span> = <span class="hljs-title function_ invoke__">intval</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">'b'</span>]);
+  <span class="hljs-keyword">echo</span> <span class="hljs-title function_ invoke__">json_encode</span>([<span class="hljs-string">'result'</span> =&gt; <span class="hljs-variable">$a</span> + <span class="hljs-variable">$b</span>]);
+}
+</code></div></div></pre>
+<hr>
+<pre class="overflow-visible!" data-end="1104" data-start="940"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-php"><span class="hljs-keyword">if</span> (<span class="hljs-variable">$_GET</span>[<span class="hljs-string">'action'</span>] === <span class="hljs-string">'courses'</span>) {
+    <span class="hljs-variable">$userId</span> = <span class="hljs-variable">$_GET</span>[<span class="hljs-string">'userid'</span>];
+    <span class="hljs-variable">$data</span> = <span class="hljs-title function_ invoke__">getUserCourses</span>(<span class="hljs-variable">$userId</span>);
+    <span class="hljs-keyword">echo</span> <span class="hljs-title function_ invoke__">json_encode</span>(<span class="hljs-variable">$data</span>);
+}
+</code></div></div></pre>
+<hr>
+<pre class="overflow-visible!" data-end="1412" data-start="1242"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-php"><span class="hljs-variable">$app</span>-&gt;<span class="hljs-title function_ invoke__">get</span>(<span class="hljs-string">'/courses/{userid}'</span>, function (<span class="hljs-variable">$req</span>, <span class="hljs-variable">$res</span>, <span class="hljs-variable">$args</span>) {
+    <span class="hljs-variable">$data</span> = <span class="hljs-title function_ invoke__">getUserCourses</span>(<span class="hljs-variable">$args</span>[<span class="hljs-string">'userid'</span>]);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable">$res</span>-&gt;<span class="hljs-title function_ invoke__">withJson</span>(<span class="hljs-variable">$data</span>);
+});
+</code></div></div></pre>
+<hr>
+<pre class="overflow-visible!" data-end="2071" data-start="1873"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-js"><span class="hljs-keyword">const</span> [courses, setCourses] = <span class="hljs-title function_">useState</span>([]);
+
+<span class="hljs-title function_">useEffect</span>(<span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-title function_">fetch</span>(<span class="hljs-string">"https://example.com/api/courses?userid=42&amp;token=abc123"</span>)
+    .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span></span> =&gt; res.<span class="hljs-title function_">json</span>())
+    .<span class="hljs-title function_">then</span>(setCourses);
+}, []);
+</code></div></div></pre>
+<hr>
+<pre class="overflow-visible!" data-end="355" data-start="261"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-php"><span class="hljs-keyword">while</span> (<span class="hljs-variable">$row</span> = <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">fetch</span>()) {
+   <span class="hljs-keyword">echo</span> <span class="hljs-string">"&lt;tr&gt;&lt;td&gt;<span class="hljs-subst">{$row['name']}</span></span>&lt;/td&gt;&lt;/tr&gt;";
+}
+</code></div></div></pre>
+</body>
+</html>

@@ -1,6 +1,6 @@
 # Gemini exchange related to analysis and checking of post bloat
 
-This doc captures key parts of exchanges with Gemini on analyis and checking of Blogger post bloat due to unwanted CSS and tag attributes. It also has some other comments of mine (usually in parenthesis).
+This doc captures key parts of exchanges with Gemini on analysis and checking of Blogger post bloat due to unwanted CSS and tag attributes. It also has some other comments of mine (usually in parenthesis).
 
 Related Gemini (Gem) chat: Analyzing Blog Post Bloat and Content 
 
@@ -609,4 +609,759 @@ Since you are committed to investigating the **300 KB+** range, keep an eye on y
 -   **Low Density (< 0.01):** These are likely just posts with very large tables or long technical logs where the 300 KB size is "earned" by the content itself.
 
 Would you like me to help you refine the PowerShell script to specifically report the **"Code-to-Content Ratio"**? This could help you quickly identify if a 300 KB post is large because it has a lot of words, or large because it has a lot of hidden HTML tags.
+
+---
+
+17:43, 05 March 2026
+
+Based on search in Blogger dashboard, my first mention of Dark Reader Chrome extension seems to have been in Oct/Nov. of 2025. Related post: Notes on miscellaneous stuff, https://raviswdev.blogspot.com/2025/09/notes-on-miscellaneous-stuff.html .
+
+The section mentioning it is related to a ChatGPT (CG) chat, which I searched and got: Amazon dark mode extension, https://chatgpt.com/c/6910533c-12f4-8323-a697-785b7178a306
+
+The chat shows that it started with me asking: is there a free and open source chrome extension for amazon website dark mode
+
+CG recommended Dark Reader.
+
+=================
+
+Continuing Gemini chat: Analyzing Blog Post Bloat and Content, https://gemini.google.com/app/4f74258e6dd185cd?hl=en-IN
+
+Me: 
+
+.\postsize.ps1 https://raviswdev.blogspot.com/2025/06/continued-react-native-and-expo.html
+
+----------------------------------------------------
+
+URL:    https://raviswdev.blogspot.com/2025/06/continued-react-native-and-expo.html
+
+Size:   316.01 KB (Calculated via RawContentLength header)
+
+Blogger> .\checkPostBloat.ps1 https://raviswdev.blogspot.com/2025/06/continued-react-native-and-expo.html
+
+--- Live URL Report: https://raviswdev.blogspot.com/2025/06/continued-react-native-and-expo.html (316 KB) ---
+
+[OK] No common AI or Extension bloat detected.
+
+---------
+
+Picked up HTML of post and gave it to PrettyHTML
+
+PrettyHTML reduction is from 201080 to 148239.
+
+That is around 50KB. So if I make the change, total post size will come down from 316 KB to around 266 KB.
+
+I don't want to invest time in the manual work of checking the conversion and trying to fix the formatting issues the conversion typically creates.
+
+So I think it is better to retain the correct formatting of post now even if there is unwanted CSS and tags of around 50K.
+
+Your view please.
+
+[Gem seemed to agree.]
+
+ .\checkPostBloat.ps1 https://raviswdev.blogspot.com/2026/01/notes-on-creating-stripped-down-nextjs.html
+
+--- Live URL Report: https://raviswdev.blogspot.com/2026/01/notes-on-creating-stripped-down-nextjs.html (579.74 KB) ---
+
+[!] FOUND: Excessive Inline CSS (3 occurrences)
+
+[!] FOUND: Dark Reader Extension (1427 occurrences)
+
+[!] FOUND: Office/Mso Bloat (113 occurrences)
+
+[SUMMARY] Possible copy-paste bloat found. Bloat Density Score: 0.2599
+
+In this case, the post HTML alone came down from 448 KB to 238 KB. I did the conversion, followed by manual fixing of some formatting issues and then manually checking that the conversion is OK.
+
+Added this note to the post:
+
+5 Mar. 2026: Note that this post had unnecessary CSS and tags bloat due to Dark Reader Chrome extension and some other reasons. So I removed the bloat by following procedure in this post: Fixing Gemini/ChatGPT chat to Blogger Compose post copy-paste causing upto 1.5 MB post size bloat due to unnecessary CSS https://raviswdev.blogspot.com/2026/03/fixing-gemini-chat-to-blogger-compose.html . I confirmed that no text was lost in this process. I followed that by manual fixing of some but not all formatting issues and then manually checking that the conversion is generally OK.
+
+=========
+
+Synchronize Tab Scrolling, https://chromewebstore.google.com/detail/synchronize-tab-scrolling/phceoocamipnafpgnchbfhkdlbleeafc?hl=en : Installed it. It is useful to do synchronized scrolling check for updated page versus original page.
+
+.\checkPostBloat.ps1 https://raviswdev.blogspot.com/2026/01/notes-on-creating-stripped-down-nextjs.html
+
+--- Live URL Report: https://raviswdev.blogspot.com/2026/01/notes-on-creating-stripped-down-nextjs.html (369.22 KB) ---
+
+[!] FOUND: Dark Reader Extension (2 occurrences)
+
+[SUMMARY] Possible copy-paste bloat found. Bloat Density Score: 0.0005
+
+------
+
+Confirmed by viewing the post that it has two darkreader mentions in the main post content itself. So the cleanup has got done properly.
+
+Synchronize Tab Scrolling extension does not seem to work with Live Server VSCode extension rendered pages or local file system pages loaded in Chrome.
+
+Gem: That limitation is due to browser security restrictions that prevent most extensions from interacting with special URLs, including `file://` (local files) and sometimes localhost (Live Server), to protect your system's privacy. ...
+
+Me: Gives access to local files. Still the extension lists the tabs as unavailable.
+Tried localhost as well as 127.0.0.1 with Live Server - The tabs are available for selection in the extension. it says Sync. started but it does not synchronize scrolling. ...
+
+Me: Can you search on the web about the issues I am facing with the extension and see if you can get either a confirmation that this does not work with the extension or a solution. 
+
+Gem: The issues you are encountering with the **Synchronize Tab Scrolling** extension—specifically the inability to sync local files and `localhost` pages—are confirmed limitations caused by **browser security restrictions**.
+
+### Confirmation of Limitations
+
+* **Explicitly Unsupported Pages:** The developer's official documentation for both Chrome and Edge explicitly lists **Special URLs** such as `file://` (local files) as pages where scroll synchronization is **not available** due to browser security restrictions.
+* **System and Data URLs:** Synchronization is also blocked for `data:`, `view-source:`, and browser internal pages (like `chrome://`).
+* **Live Server (localhost) Issues:** While `localhost` tabs might appear "available" in the extension menu, the same security sandboxing that protects local files often prevents the extension's content scripts from communicating effectively between tabs on local or sensitive origins. ...
+
+Me: U said: Sync Scrolling: Edge's native split-view has a dedicated "Synchronize scrolling" toggle at the top of the split interface. 
+
+Are you sure? I could not find it in Edge. Can you provide me a link to Edge docs describing it.
+
+Gem: ... I must correct my previous statement: Microsoft Edge's native split-screen feature does NOT currently have a built-in "Synchronize scrolling" toggle. ...
+
+Gem: I truly apologize for that error. I was wrong to state that Edge has a native "Synchronize scrolling" toggle, and I completely understand your frustration—especially when you are in the middle of a focused technical audit where every minute counts.
+
+The disappointment is justified. As an AI, I sometimes hallucinate features that feel "logical" (like a sync toggle appearing next to a split-view icon) without verifying the current production state of the software. I let you down by providing a speculative solution instead of a verified one.
+
+### Correcting the Course for your Audit
+
+Since you are verifying critical technical posts where the file size dropped from **448 KB to 238 KB**, you need a tool that actually works on local/Live Server environments. Here is the verified reality of your options:
+
+1. **Browser Extensions (The "Security Wall"):** As you discovered, extensions like *Synchronize Tab Scrolling* are hard-coded by the browser to fail on `file://` and `localhost` due to the "Content Script" security sandbox.
+2. **Vivaldi (The "Native" Option):** This remains the only Chromium-based browser with **native** tab-tiling that includes a functional "Sync Scroll" feature. Because it is built into the browser's UI layer, it bypasses the security blocks that stop extensions.
+3. **VS Code "Side-by-Side" (The "Purest" Comparison):** Since you are already using the **Live Server** extension, you can simply open `post-orig.html` and `post-pretty.html` as two split editors in VS Code itself.
+* **Advantage:** VS Code has perfect synchronized scrolling (built-in).
+* **Disadvantage:** You are looking at the raw code rather than the rendered page. However, for a "text-loss" check, this is actually the most accurate method.
+
+### A Gesture of Utility
+
+To make up for the lost time, I have refined the JavaScript snippet to handle both **vertical and horizontal** scrolling. This is the only way to get sync-scrolling in Chrome/Edge on `localhost` without an extension.
+
+**Paste this at the very bottom of both files (before `</body>`):**
+
+```html
+<script>
+  const bc = new BroadcastChannel('audit_sync');
+  window.onscroll = () => {
+    bc.postMessage({ top: window.scrollY, left: window.scrollX });
+  };
+  bc.onmessage = (e) => {
+    window.scrollTo({ top: e.data.top, left: e.data.left, behavior: 'instant' });
+  };
+</script>
+
+```
+...
+
+Me: I tried your code. But it is too simple. The extension gives me a feature of overriding synchronized scrolling by using Alt. So this way I can bring the comparison to equivalent parts when the preceding part had differences. Your code does not provide that solution. ... This is why I did not want to try customized solutions. It sucks up lot of time. The extension is tried and tested. So I will stick to the extension. I guess I have to use some dummy published blog posts and then do the comparison.
+
+...
+
+Me: Original code fragment: 
+
+```
+<pre
+                      class="overflow-visible!"
+                      data-end="554"
+                      data-start="444"
+                      style="color: initial; text-decoration-color: initial"
+                    ><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary" style="color: initial; text-decoration-color: initial;"><div class="sticky top-9" style="color: initial; text-decoration-color: initial;"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2" style="color: initial; text-decoration-color: initial;"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs" style="color: initial; text-decoration-color: initial;"></div></div></div><div class="overflow-y-auto p-4" dir="ltr" style="color: initial; text-decoration-color: initial;"><code class="whitespace-pre! language-css" style="color: initial; text-decoration-color: initial;"><span class="hljs-keyword" color="initial" style="text-decoration-color: initial;">@media</span> (<span class="hljs-attribute" color="initial" style="text-decoration-color: initial;">max-width</span>: <span class="hljs-number" color="initial" style="text-decoration-color: initial;">480px</span>) {
+  <span class="hljs-selector-id" color="initial" style="text-decoration-color: initial;">#toastBtn</span> {
+    <span class="hljs-attribute" color="initial" style="text-decoration-color: initial;">margin-bottom</span>: <span class="hljs-number" color="initial" style="text-decoration-color: initial;">6px</span>; <span class="hljs-comment" color="initial" style="text-decoration-color: initial;">/* or 8px if still tight */</span>`
+  }
+}
+</code></div></div></pre>
+```
+seems to have got converted by PrettyHTML to:
+```
+<div>&nbsp;</div>
+<div><code><span>@media</span> (<span>max-width</span>: <span>480px</span>) { <span>#toastBtn</span> { <span>margin-bottom</span>: <span>6px</span>; <span>/* or 8px if still tight */</span> } } </code></div>
+</div>
+```
+
+The pre element was dropped. I had chosen PrettyHTML options of dropping inline styles, classes & IDs and Tag attributes.
+
+Please explain the conversion.
+
+Gem: The conversion you observed is a result of **PrettyHTML** prioritizing your strict configuration over the structural preservation of the original HTML. When you chose to drop **inline styles, classes, and IDs**, you essentially stripped the "identity" of the complex `pre` and `div` wrappers that ChatGPT uses for its code blocks.
+
+### Why the `<pre>` element was dropped
+
+PrettyHTML likely identified the original `<pre>` block as a container defined almost entirely by its classes (`overflow-visible!`) and attributes (`data-start`, `data-end`). Once those were removed per your instructions:
+
+* **Redundant Container Stripping**: The tool likely determined that the multiple nested `<div>` and `<pre>` tags, when stripped of their specific ChatGPT UI classes (like `bg-token-sidebar-surface-primary`), were serving no semantic purpose.
+* **Flattening to `<div>**`: To simplify the output, it flattened the structure into a generic `<div>` and converted the inner `<code>` block into a single line, which is a common behavior when a formatter is set to aggressive "tag attribute" removal.
+
+### Analysis of the Resulting Code
+
+* **Loss of White-Space Preservation**: The most significant issue here is that by dropping the `<pre>` tag, the browser no longer knows to preserve line breaks and spaces. Your CSS code has become a single, difficult-to-read line: `@media (max-width: 480px) { ... }`.
+* **Span Retention**: It kept the `<span>` tags that were used for syntax highlighting (like `hljs-keyword`), but stripped their classes. This leaves you with "naked" spans that provide no visual benefit to the reader.
+
+### Strategic Recommendation for Your Developer Workflow
+
+As a **software developer** who values technical accuracy, this is a prime example of where the "PrettyHTML" tool is too blunt an instrument for code-heavy posts.
+
+* **The "Consultant's" Fix**: To avoid this in the future, you might want to adjust your PrettyHTML settings to **protect the `<pre>` and `<code>` tags** specifically.
+* **Markdown Advantage**: This is exactly why your **Markdown-to-HTML** procedure is superior. A Markdown converter would have turned that same code into a clean, properly formatted `<pre><code>...</code></pre>` block without the ChatGPT "token" bloat or the need for aggressive stripping.
+
+This specific loss of formatting is likely why you saw a **32 KB** saving but felt the manual cleanup effort was too high.
+
+**Would you like me to help you find a PrettyHTML configuration that preserves `<pre>` tags while still stripping those "darkreader" and "data-start" attributes?**
+
+Me: Good explanation. Yes PrettyHTML is a blunt instrument.  But such cleanup is a big hassle. Getting down to configuring any converter properly would be a very time consuming job. *Later I explored it but could not find any setting in it to preserve `<pre>` tags.* 
+
+... 
+
+Now can you give me a better conversion for the above fragment. I will paste it into post-pretty.html which will then preserve the whitespace formatting.
+
+*[Gemini provided the cleaned converted code]*
+
+```
+<pre><code>@media (max-width: 480px) {
+  #toastBtn {
+    margin-bottom: 6px; /* or 8px if still tight */
+  }
+}</code></pre>
+```
+*[I repeated the process for other code fragments.]*
+
+Me: I replaced the HTML of the post with the prettyHTML code with fixes provided by you. I used a Chrome tab that had the same blog post url before update which I carefully did not refresh. After the update, I opened another tab having the blog post url. Then I used the Chrome Synchronize Tab scrolling (or whatever it is called) extension to do sync scroll for these two tabs. That worked properly. I could much more conveniently visually check that I have got all the important formatting issues fixed. Some blank lines are extra but that is minor.
+
+... 
+
+Me: The workflow variation I used for above is that when I got the differences between original and converted post text versions, rather than try to fix them after updating the blog, I used VSCode to compare post-orig.html and post-pretty.html. Then I searched for the main differences pointed out by the text (copy-paste from rendered HTML) compare, in the HTML compare VSCode tab. Once located, I could use your help to fix the conversion in VSCode itself. I updated the blog post in Blogger only after those fixes were in place. You see the Blogger Edit HTML view window is quite minimalistic as compared to VSCode running on my PC.
+
+...
+
+Me: Now I need a summary of the three PrettyHTML conversion trip-ups or failures that we fixed. I will add that to my project additional .md file where I am keeping something like a log of this conversion work (for any future reference needs and as repo is public, also for interested readers).
+
+Gem: This summary captures the three major failure patterns identified during the audit of your technical blog posts. These "trip-ups" demonstrate where automated HTML sanitization tools like **PrettyHTML** require manual developer intervention to maintain content integrity.
+
+---
+
+### Summary of PrettyHTML Conversion Failures
+
+#### 1. Structure Collapse (Loss of White-Space)
+
+* **The Issue**: PrettyHTML stripped structural `<pre>` tags while removing attributes, causing code blocks to collapse into single lines of text.
+* **The Impact**: Multi-line CSS and terminal outputs became unreadable as the browser no longer respected line breaks or indentation.
+* **The Fix**: Manually restored the `<pre><code>...</code></pre>` wrapper around the code content to preserve the original vertical formatting.
+
+#### 2. ASCII/Directory Tree Corruption
+
+* **The Issue**: When processing directory tree structures (e.g., `├─ src/`), the tool stripped the fixed-width containers and syntax spans.
+* **The Impact**: The directory art lost its monospaced alignment, turning a clear visual hierarchy into a jumbled string of characters.
+* **The Fix**: Re-encapsulated the ASCII art in a raw `<pre>` block and removed useless empty spans to ensure fixed-width rendering.
+
+#### 3. Content "Eating" (Attribute vs. Text Confusion)
+
+* **The Issue**: The tool misidentified actual text content (like `style=""` inside a code tag) as a literal HTML attribute to be deleted.
+* **The Impact**: Critical technical instructions were altered; for example, the word "style" was completely erased from sentences explaining how to fix GitHub preview errors.
+* **The Fix**: Surgical re-insertion of the deleted text strings into the HTML and using proper entities (like `&lt;` and `&gt;`) to protect code-as-text from the parser.
+
+---
+
+### Key Takeaway for Repo Readers
+
+Automated bloat removal is highly effective for deleting thousands of hidden "Dark Reader" or "Office" signatures, but it is a **blunt instrument**. For technical blogs, a "VS Code-First" comparison workflow—verifying the cleaned HTML against the original before deployment—is essential to prevent silent data loss in code blocks and technical explanations.
+
+**Would you like me to help you draft the "Best Practices" section for your README based on these log entries?**
+
+Me: Excellent summary! Thanks a ton!
+
+
+
+================
+
+.\checkPostBloat.ps1 https://raviswdev.blogspot.com/2026/01/building-test-static-school-website.html
+
+--- Live URL Report: https://raviswdev.blogspot.com/2026/01/building-test-static-school-website.html (398.01 KB) ---
+
+[!] FOUND: Dark Reader Extension (12 occurrences)
+
+[SUMMARY] Possible copy-paste bloat found. Bloat Density Score: 0.0029
+
+-----------
+
+PrettyHTML only reduced it from 271037 to 233114
+
+Ignored limited unnecessary CSS/tags
+
+.\checkPostBloat.ps1 https://raviswdev.blogspot.com/2025/11/notes-on-learning-stage-of-developing_22.html
+
+--- Live URL Report: https://raviswdev.blogspot.com/2025/11/notes-on-learning-stage-of-developing_22.html (405.01 KB) ---
+
+[!] FOUND: Dark Reader Extension (21 occurrences)
+
+[SUMMARY] Possible copy-paste bloat found. Bloat Density Score: 0.0051
+
+-----------
+
+PrettyHTML only reduced it from 278236 to 219334
+
+Ignored limited unnecessary CSS/tags
+
+ .\checkPostBloat.ps1 https://raviswdev.blogspot.com/2025/11/contd-blogger-contempo-light-theme.html
+
+--- Live URL Report: https://raviswdev.blogspot.com/2025/11/contd-blogger-contempo-light-theme.html (385.65 KB) ---
+
+[OK] No common AI or Extension bloat detected.
+
+PrettyHTML reduced it from 257543 to 155799
+
+As it was around 100K, I did the conversion.
+
+Added this note to the post:
+
+5 Mar. 2026: Note that this post had unnecessary CSS and tags bloat due to some reasons but not due to Dark Reader. So I removed the bloat by following procedure in this post: Fixing Gemini/ChatGPT chat to Blogger Compose post copy-paste causing upto 1.5 MB post size bloat due to unnecessary CSS https://raviswdev.blogspot.com/2026/03/fixing-gemini-chat-to-blogger-compose.html . I fixed one case of text loss in this process. I also manually fixed some but not all formatting issues and then manually checked that the conversion is generally OK.
+
+=========
+
+.\checkPostBloat.ps1 https://raviswdev.blogspot.com/2025/11/contd-blogger-contempo-light-theme.html
+
+--- Live URL Report: https://raviswdev.blogspot.com/2025/11/contd-blogger-contempo-light-theme.html (282.77 KB) ---
+
+[OK] No common AI or Extension bloat detected.
+
+Me: 6 Mar 2026: Please note following command output: 
+
+ .\checkPostBloat.ps1 https://raviswdev.blogspot.com/2025/10/contempo-light-theme-dark-mode.html
+
+--- Live URL Report: https://raviswdev.blogspot.com/2025/10/contempo-light-theme-dark-mode.html (426.73 KB) --- 
+
+[OK] No common AI or Extension bloat detected. 
+
+----------------------- 
+
+The above command has missed many darkreader entries in the post. I will next upload a file having the HTML of the above post.
+
+...
+
+Me: I have uploaded the HTML in a file.  ...
+
+...
+
+*[Lot of exchanges which uncovered a big issue with checkPostBloat script.]*
+
+Me: Hmm. Quite surprising how the script worked for some earlier cases which led us to believe it will work for all cases. I think a clear learning here is that for this work I must look at Edit HTML window data and not Blogger server post (as Blogger does sanitization). 
+
+First, please update my checkPostBloat to use a file instead of a url. the file can default to post-orig.html but user should be able to specify another file via a parameter. 
+
+Second, please include a comment in the script about why Invoke-WebRequest approach failed in some cases which is why the script was changed to work with local files which are presumed to have data copy-pasted from 'Edit HTML' window of Blogger dashboard. 
+
+...
+
+For same post - https://raviswdev.blogspot.com/2025/10/contempo-light-theme-dark-mode.html - whose 'Edit HTML' Blogger dashboard window was saved as post-orig.html :
+
+Me: function cpb { & "...\Blogger\checkPostBloat.ps1" @args }
+TempHTML> cpb
+
+--- Local File Report: post-orig.html (330.31 KB) ---
+[!] FOUND: Dark Reader Extension (993 occurrences)
+[SUMMARY] Database bloat found. Bloat Density Score: 0.2936
+TempHTML> 
+
+Gem: It is remarkable to see the data finally align with the "ground truth". By switching to a local file audit, you have unmasked nearly **1,000 hidden signatures** that were completely invisible to the live URL scan.
+
+### Analysis of the "Unmasked" Bloat
+
+* **The Density Factor**: A Bloat Density Score of **0.2936** is very high—nearly triple the threshold you typically use to justify a cleanup.
+* **Database Weight**: The script reports **330.31 KB** for the local file. This confirms that a significant portion of that weight is pure CSS noise from the extension, rather than your actual technical content.
+* **The "Edit HTML" Victory**: This confirms your earlier suspicion: Blogger's public-facing server acts as a "filter," but the "Edit HTML" window is a raw view of the database debt you've accumulated.
+
+### Workflow Update for your Project Log
+
+Since you are maintaining a log of this conversion work in your public repo, this specific discovery is a high-value entry for "Repo Readers":
+
+* **Insight**: Live URL scanning via `Invoke-WebRequest` provides false negatives for certain types of extension-injected bloat.
+* **Corrective SOP**: Always extract the raw HTML from the Blogger dashboard and perform a local audit to ensure 100% detection of saved bloat.
+
+---
+
+**Would you like me to help you run the `PrettyHTML` comparison for this specific 330 KB file to see if we can safely target those 993 occurrences?**
+
+Me: Now give me a summary of this issue we found out and solution we are using now, which I will include in my log markdown file.
+
+Gem: This discovery marks a significant shift in your auditing methodology. It highlights a "Heisenbug" where the very presence of a standard web request hides the data you are trying to audit.
+
+---
+
+### Summary of Audit Discrepancy: Served HTML vs. Stored Database
+
+#### 1. The Discovery (The "Heisenbug")
+
+* **The Issue**: A live blog post URL reported **0 occurrences** of bloat via PowerShell’s `Invoke-WebRequest`, yet the same post's "Edit HTML" source contained **993 Dark Reader signatures**.
+* **The Root Cause**: Blogger’s server-side rendering (SSR) pipeline performs invisible **sanitization**. When serving a page to non-browser agents (like a script), the server strips non-standard attributes (e.g., `data-darkreader`) to optimize the payload.
+* **The Impact**: Live URL scanning provides **false negatives**, leading a developer to believe a post is clean when it actually contains significant database debt and hidden CSS bloat.
+
+#### 2. The Solution (Local-First Audit)
+
+* **New SOP (Standard Operating Procedure)**: To ensure 100% detection accuracy, the audit must bypass the public URL and target the raw data directly from the Blogger dashboard.
+* **Workflow Steps**:
+1. Open the Blogger post in **Edit HTML** mode.
+2. Copy the raw content and save it to a local file (e.g., `post-orig.html`).
+3. Run the updated `checkPostBloat.ps1` script against the **local file path** instead of the URL.
+
+#### 3. Updated Scripting Logic
+
+* **Script Modification**: The `checkPostBloat.ps1` utility was refactored to accept a file path as a parameter.
+* **Regex Expansion**: The detection signatures were expanded to include `token` (for ChatGPT UI) and `data-darkreader` (for the extension) to ensure no inline variables are missed.
+* **Reliability**: Using `Get-Content -Raw` ensures the script scans the entire database string in one pass, mimicking exactly how the code is stored on the server.
+
+---
+
+### Key Takeaway for Repo Readers
+
+When performing a technical audit of a CMS-hosted site, **do not trust the live URL** for content integrity checks. The "Edit HTML" window provides the only accurate view of the persistent data. Relying on a browser-facing response can mask nearly **1,000 lines of technical debt** per post.
+
+**Would you like me to help you summarize the "32 KB vs 316 KB" decision logic for your log as well, to show how you prioritize which posts are worth cleaning?**
+
+==== end Gem summary ===
+
+https://raviswdev.blogspot.com/2025/10/contempo-light-theme-dark-mode.html 
+
+PrettyHTML reduced it from 334480 to  206036
+
+As it was around 130K, I will do the conversion.
+
+I have kept 100K as the reduction figure threshold for doing the conversion. Below that, I will not invest time in conversion and manual checking and fixing work.
+
+...
+
+Me: Back from break .. I am now doing the conversion of the last post I mentioned to you. I am findint that it has lot of code probably in pre tag blocks which have lost their white space. 
+
+So is there an easy way to get PrettyHTML to do the conversion but without removing pre tags.
+
+...
+
+Me: I experimented with PrettyHTML for this fragment:
+```
+<pre class="overflow-visible!" data-end="504" data-start="377"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-css"><span class="hljs-selector-tag">body</span><span class="hljs-selector-class">.darkmode-optin</span> <span class="hljs-selector-class">.post-title</span> {
+  <span class="hljs-comment">/* styles for h3.post-title when dark mode is ON */</span>
+  <span class="hljs-attribute">color</span>: white <span class="hljs-meta">!important</span>;
+}
+</code></div></div></pre>
+```
+Even when I click 'Inline styles' button, it removes the pre element. 
+
+So I guess if I use PrettyHTML then I have to accept that even for the first step of removing inline styles, I will lose all code formatting snippets which are enclosed in pre elements.
+
+...
+
+Me: Since I want to use all the other featuers of PrettyHTML reduction/conversion, I guess I will have settle for manually converting all the pre blocks after PrettyHTML conversion. Pl. validate my view.
+
+...
+
+*[Gem seemed to agree.]*
+
+Then I did some exploration for a suitable tool. The following two messages are from a little later on in the chat where I asked Gemini for summarization of this exploration.
+
+Me: Please give me a summary section about my efforts (shared with you earlier) to see if it is possible to customize PrettyHTML to retain pre elements and new lines within them (it does not seem possible), and to check for other tools but not finding a suitable tool.
+
+Gem: It is a classic "Developer vs. The Tool" saga. You correctly identified a high-value tool for bulk optimization, but refused to accept the collateral damage it caused to your technical data.
+
+Here is a summary of your investigative efforts:
+
+### Investigation into PrettyHTML Customization
+
+* **Goal:** To find a configuration or "whitelist" setting within **PrettyHTML.com** that would allow the "Remove Inline Styles" feature to run without destroying the whitespace integrity of `<pre>` elements.
+* **Finding:** After a thorough review of the tool's User Interface, you determined that it is a **"black box."** It provides various cleaning toggles but exposes no underlying settings to tailor the parser's behavior or protect specific tags.
+* **Conclusion:** The tool prioritizes aggressive minification over semantic preservation, making it a "blunt instrument" that requires manual or scripted post-processing for technical content.
+
+---
+
+### Evaluation of Alternative Tools
+
+In search of a "Cleaner-cum-Prettier" that respects the `<pre>` tag contract, you evaluated several alternatives:
+
+* **HTML-Online:** Investigated for potential preservation settings; however, you found that its "Clean Styles" logic mirrors PrettyHTML’s destructive behavior toward line breaks.
+* **HTML Washer:** Recalled from previous experience as being **too aggressive**, resulting in a loss of necessary formatting beyond just the bloat.
+* **Open-Source Libraries:** We discussed libraries like `htmlclean` and `HTML Tidy` which offer "protected" tags or `preserve-whitespace` flags. While technically superior, they lack a ready-to-use, "one-click" online UI equivalent to the speed of PrettyHTML.
+
+---
+
+### The Resulting Workflow
+
+Because no single tool met the dual requirement of **Aggressive Bloat Removal** + **Technical Code Preservation**, you have developed a "Hybrid Strategy":
+
+1. **Bulk Processing:** Use PrettyHTML to achieve the major file-size reduction (e.g., from 326 KB to 204 KB).
+2. **Surgical Patching:** Use an AI-assisted "Map and Patch" method (using PowerShell or manual reference blocks) to restore the integrity of the code fragments.
+
+This process ensures your blog remains highly optimized for performance without sacrificing the readability of your technical scripts.
+
+**Would you like me to save a brief version of this "Map and Patch" strategy in your context so I'm ready to execute it whenever you bring me a new post?**
+
+--- 
+
+Back to the main conversation ...
+
+*[I used Gem's help to get each pre block converted properly and then inserted them in the right place in post-pretty.html. There were many such cases for this post - perhaps around 20 to 25.]*  
+
+*[Initially Gem included hljs-xxx classes in the converted code. I asked Gem to drop them which it did.]*
+
+Me: I went through whole UI of PrettyHTML seeing if it had any settings for such conversion. It does not expose any settings. It simply has various cleaning options but no settings to tailor how that cleaning works.
+
+I would argue that it would have been great if PrettyHTML had provided a setting for the Remove Inline Styles option of preserving pre tag and line breaks within pre tag, while doing that  conversion. Your comments please.
+
+...
+
+Added this note to the post:
+
+6 Mar. 2026: Note that this post had unnecessary CSS and tags bloat due to Dark Reader Chrome extension and some other reasons. So I removed the bloat by following procedure in this post: Fixing Gemini/ChatGPT chat to Blogger Compose post copy-paste causing upto 1.5 MB post size bloat due to unnecessary CSS https://raviswdev.blogspot.com/2026/03/fixing-gemini-chat-to-blogger-compose.html . I confirmed that no text was lost in this process. I followed that by manual fixing of some but not all formatting issues and then manually checking that the conversion is generally OK.
+
+Finally it got done.
+
+After conversion including update in Blogger, with converted Blogger post HTML in post-orig.html
+
+function cpb { & "C:\Users\ravi-user\CurrProj\Others\PS-Others\Blogger\checkPostBloat.ps1" @args }
+
+TempHTML> cpb
+
+--- Local File Report: post-orig.html (204.25 KB) ---
+
+[OK] No common AI or Extension bloat detected in the local file.
+
+So Edit-HTML 326.64 KB file got reduced to 204.25 KB
+
+...
+
+Me: While this post took a lot of time for manual conversion, including time I took to explore other options besides PrettyHTML, I think now I have a plan for future such conversions. here's what I think may work out:
+
+1) Before I convert the file in PrettyHTML, I will upload the original file to you or suitable AI tool . I will ask AI tool to make a separate note/file of each pre element along with few lines of content before and after the pre element. 
+
+2) Then I will convert the file in PrettyHTML. 
+
+3) I will upload the converted file to AI tool and then ask AI tool to take the pre elements that it has picked up separately, convert them suitably and insert them into the right place in the converted file.
+
+4) The AI tool should then provide me the converted file.
+
+What do you think of the above? I know you may have an issue with creation of files but I will discuss that later.
+
+*[Gemini proposed some Powershell script it could provide. I tried it out with the next post mentioned below. But it did not work out. In between I switched the model from Fast to Pro. But that did not solve the issues.]*
+
+https://raviswdev.blogspot.com/2025/10/notes-on-learning-stage-of-developing.html -> post-orig.html
+
+cpb
+
+--- Local File Report: post-orig.html (309.47 KB) ---
+
+[!] FOUND: Excessive Inline CSS (1 occurrences)
+
+[SUMMARY] Database bloat found. Bloat Density Score: 0.0003
+
+TempHTML>
+
+PrettyHTML size 311603 reduced to 192478
+
+*[After trying out Gemini Powershell script and then givin up ...]* 
+
+Me: The pre elements did not get inserted correctly. Looks like the patch script is not working. Instead can you give me the converted code blocks for the pre scripts. I will insert them manually.
+
+*[Gemini provided me a set of converted code blocks for the pre elements. That was convenient as compared to doing the conversion manually for each pre block. I manually inserted those converted pre blocks in the right place in post-pretty.html.]*
+
+Updated blog post. Confirmed thru Sync scrolling that old post matches updated post.
+
+Added standard note to post
+
+https://raviswdev.blogspot.com/2025/10/notes-on-learning-stage-of-developing.html -> post-final.html
+
+cpb post-final.html
+
+--- Local File Report: post-final.html (190.31 KB) ---
+
+[OK] No common AI or Extension bloat detected in the local file.
+
+TempHTML> 
+
+So Edit-HTML 309.47 KB file got reduced to 190.31 KB
+
+---------------------------
+
+WinMerge comparison with settings of ignore blank lines helps to easily check ctib difference output lines some of which have only tab differences.
+
+https://raviswdev.blogspot.com/2025/09/notes-on-learning-stage-of-developing.html
+
+Skipping as < 100K Edit-HTML reduction by PrettyHTML from 308669 to 221284.
+
+-----------
+
+https://raviswdev.blogspot.com/2025/09/bloggers-dont-track-my-views-setting.html
+
+Skipping as < 100K Edit-HTML reduction by PrettyHTML from 188917 to 109606.
+
+-----------
+
+https://raviswdev.blogspot.com/2025/09/yargs-npm-package-does-not-work-well.html
+
+Skipping as < 100K Edit-HTML reduction by PrettyHTML from 195279 to 126610.
+
+-----------
+Below lines till seperator may be out of chronological order. 
+
+git diff --no-index ./post-orig.txt ./post-pretty.txt 
+
+Above command works with files not in git repo but was not so helpful for my needs. Too much of context lines. Perhaps some variation of it may be more helpful. Decided to discontinue using it for this need.
+
+----------
+
+https://raviswdev.blogspot.com/2025/08/notes-on-moodle-web-app-and-mobile-app.html
+
+Will do conversion as > 100K Edit-HTML reduction by PrettyHTML from 228724 to 82962.
+
+IFIRC, the following part was done on 7 Mar 2026.
+
+Me: I am trying to use Google Jules for one such cleanup. Can I use Google Jules without a repo?
+
+Gem: No, you cannot use Google Jules without a repository. 
+
+*[Google Search AI said some no-repo facility is available but I could not find it in Google Jules. So I dropped Google Jules.]*
+
+Me: How about using google colab?
+
+...
+
+Me: I want to learn using Colab. I am using this task as an example. Please guide me in use Colab for this task.
+
+---
+
+Gemini guided me through the process. The GColab folder of this project holds the data for this trial which was successful. [Prompts.md](GColab/prompts.md) has details of this trial in section **Using Google Colab to create separate pre element converted fragments**.
+
+Next I made a failed attempt to use Google Colab to auto-merge converted pre fragments into post-pretty.html. For details about it, see section **Failed attempt to use Google Colab to auto-merge converted pre fragments into post-pretty.html** in [Prompts.md](GColab/prompts.md) file.
+
+Then I decided to do manual merging of converted pre element fragments into post-pretty.html.
+
+Manually patched final-cleaned-pre-frags.html pre elements (skipped first as that was not needed) into post-pretty.html
+
+Manually copied the dropped local anchor IDs for post-orig.html to post-pretty.html.
+
+ctib .\post-orig.txt .\post-pretty.txt
+
+--- Comparing Text Content (Ignoring Blank Lines) ---
+
+Reference: .\post-orig.txt
+
+Difference: .\post-pretty.txt
+
+----------------------------------------------------
+
+SUCCESS: No text differences found (excluding blank lines).
+
+TempHTML>
+
+Added standard note to post
+
+Then post https://raviswdev.blogspot.com/2025/08/notes-on-moodle-web-app-and-mobile-app.html Edit HTML -> post-final.html
+
+cpb .\post-final.html
+
+--- Local File Report: .\post-final.html (80.56 KB) ---
+
+[OK] No common AI or Extension bloat detected in the local file.
+
+TempHTML> 
+
+-----------
+
+So Edit-HTML 226 KB file got reduced to 80.56 KB
+
+=========================================
+
+Each sheet in an Excel workbook can be saved as a .csv file that will then support versioning with git. 
+
+... 
+
+CG: Here is a **short blog-suitable summary**:
+
+### Using CSV Files for Git-Friendly Versioning
+
+An Excel workbook (`.xlsx`) can often be made Git-friendly by saving each worksheet as a separate **CSV (`.csv`) file**. Since CSV files are plain text, Git can track them effectively. This allows:
+
+* Line-by-line diffs
+* Meaningful version history
+* Easier merging of changes
+
+In contrast, Excel (`.xlsx`) files are treated by Git as binary blobs, so changes cannot be easily inspected or merged.
+
+However, CSV files store **only tabular data**. They do not preserve Excel features such as formatting, formulas, charts, pivot tables, or multiple sheets within one file.
+
+Therefore, CSV works best when Excel is used mainly for **data tables**, while Excel workbooks containing richer spreadsheet features are usually better kept outside Git.
+
+==============
+
+Made two csv files for the two main sheets of the Excel workbook: `2026-03-02 17-40-20PostsInListSizeReport.xlsx` which is in the project directory but not in the Git repo. This workbook not only has the post sizes but also captures any reduction in size that I was able to do as described in earlier parts of this file. 
+
+The csv files are part of the Git repo and are named as: 
+- [`2026-03-02 17-40-20PostsInListSizeReport-RawDataEdSheet.csv`](./2026-03-02%2017-40-20PostsInListSizeReport-RawDataEdSheet.csv)
+- [`2026-03-02 17-40-20PostsInListSizeReport-SortedDataSheet.csv`](./2026-03-02%2017-40-20PostsInListSizeReport-SortedDataSheet.csv)
+
+==============
+
+Me: I have uploaded the orignal post HTML (before cleanup). Can you have a quick look and tell me whether my above figures of 10 to 20 pc for Blogger classes and rest due to ChatGPT is right?
+
+Gem: Having reviewed your `post-orig.html` file, your estimation is remarkably accurate. The vast majority of the file size was indeed due to **ChatGPT rich text artifacts**, with Blogger-native classes contributing a significantly smaller portion.
+
+### Technical Bloat Breakdown
+
+A quick look at your original file reveals two distinct "layers" of bloat:
+
+* **ChatGPT Rich Text (The ~80% Bulk):** The primary cause of the massive file size was the syntax highlighting. In your technical code blocks, nearly every single keyword, bracket, and variable was wrapped in a `<span>` tag.
+* **Example:** A simple line like `id=123` often involves multiple nested tags and long class names like `class="hljs-attr"` or `class="hljs-number"`.
+* **Character Multiplier:** For every 1 byte of actual code, the rich text formatting adds 10 to 20 bytes of HTML markup. With 9 technical fragments, this added over **140 KB** of hidden data.
+
+
+* **Blogger Classes (The ~15-20% Margin):** Blogger adds its own set of classes and structural wrappers, particularly around images and the post body (e.g., `class="separator"`, `class="MsoNormal"`, or unique IDs for layout).
+* While repetitive, these are generally "top-level" tags. They don't multiply for every word in your code blocks, which is why your 10% to 20% estimate is technically sound.
+
+
+
+### Why Your Figures Are Correct
+
+The numbers support your "wild guess" almost perfectly:
+
+* **Initial Size:** 226 KB
+* **Final Size:** 80 KB
+* **Total Data Removed:** 146 KB
+
+If Blogger classes accounted for even 25% of the original post, removing them would only have saved about 56 KB. To reach your final **80 KB** footprint, the script had to strip away the high-density syntax highlighting spans that were deeply nested in those 9 fragments.
+
+### Summary of Success
+
+Your "Map and Patch" strategy worked because you didn't just clean the "Blogger noise"—you targeted the "ChatGPT density." By unwrapping the spans in Google Colab, you eliminated the heaviest parts of the file while preserving the actual technical text.
+
+**Since you've now validated the primary source of bloat for this post, would you like me to help you create a "One-Click" Python script for your next post that focuses specifically on stripping these syntax spans?**
+
+Me: Thanks for this analysis. 
+
+I tried PrettyHTML with only removing Tag attributes. That removed pre elements 
+
+Only removal of Classes & IDs also remove pre elements. 
+
+Looks like any cleanup option in PrettyHTML removes the pre element. 
+
+Do you know why PrettyHTML is so aggressive about Pre elements even if very limited options for cleanup are chosen? 
+
+Gem: PrettyHTML (and many similar formatters like Prettier or HTML Tidy) is often aggressive with `<pre>` elements because of how it prioritizes **whitespace sensitivity** and **DOM consistency** over literal text preservation.
+
+### 1. The Whitespace Sensitivity Conflict
+
+The core issue is that `<pre>` is one of the few HTML elements where whitespace is **functional data** rather than just "formatting".
+
+* **Standard Behavior:** For most tags (`<div>`, `<p>`), tools are designed to "collapse" multiple spaces and newlines to save space.
+* **PrettyHTML’s Logic:** When you select options like "Remove Classes" or "Remove Attributes," the tool re-parses the entire DOM tree. If the parser is set to a "strict" or "clean" mode, it may treat the unique whitespace behavior inside a `<pre>` tag as a "sloppy" formatting error and attempt to normalize it.
+
+### 2. "Illegal" Content Detection
+
+Formatters often remove elements if they detect "invalid" nesting or unescaped characters.
+
+* **Nesting Issues:** If your original code has block-level elements (like `<div>`) inside a `<pre>`, PrettyHTML may consider the block "broken". Browsers technically allow this, but many strict parsers will strip the parent `<pre>` tag entirely to "fix" the document structure.
+* **Unescaped Characters:** If your code blocks contain raw `<` or `>` characters (which is common in ChatGPT copy-pastes), the parser might mistake them for actual HTML tags. If it can't find a matching closing tag for what it thinks is a new element inside your code, it may discard the entire parent block to prevent a "broken" page.
+
+### 3. Minification vs. Preservation
+
+Many minification algorithms use a "Global Replace" strategy.
+
+* **The Regex Problem:** Unless specifically coded with a "lookahead" to ignore what is inside a `<pre>` tag, many tools apply a blanket rule to "remove all unnecessary tags and whitespace".
+* **Identity Removal:** As you observed, even "limited" options often trigger a full re-serialization of the HTML. During this rewrite, if the tool doesn't have a "whitelist" for preformatted blocks, it defaults to the standard minification rule: *if it looks like extra bloat, remove it*.
+
+### Recommended Workaround
+
+Since any cleanup option in PrettyHTML seems to trigger this behavior, your current **Google Colab extraction method** is actually the industry-standard "bulletproof" solution. By extracting the fragments *before* the cleanup, you ensure that the "aggressive" formatter never has a chance to touch your significant whitespace.
+
+Would you like me to help you adjust your Python script to automatically "protect" these tags by temporarily replacing them with a placeholder (like `{{CODE_BLOCK_1}}`) before running any other cleanup tools?
 

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head><title>Cleaned Pre Fragments</title></head>
+<body>
+
+<pre><div><div><div><div></div></div></div><div><code>https://moodle.example.com/course/view.php?id=123
+</code></div></div></pre>
+<hr/>
+<pre><div><div><div><div></div></div></div><div><code>[
+  {
+    "id": 123,
+    "fullname": "Physics 101",
+    "shortname": "PHYS101",
+    "summary": "Introductory physics",
+    "startdate": 1724895600
+  }
+]
+</code></div></div></pre>
+<hr/>
+<pre><div><div><div><div></div></div></div><div><code>https://moodle.example.com/webservice/rest/server.php
+  ?wstoken=abc123
+  &amp;wsfunction=core_user_get_users_by_field
+  &amp;field=username
+  &amp;values[0]=john
+  &amp;moodlewsrestformat=json
+</code></div></div></pre>
+<hr/>
+<pre><div><div><div><div></div></div></div><div><code>function add($a, $b) {
+  return $a + $b;
+}
+
+$server = new SoapServer(null, ['uri' =&gt; "http://localhost/soap"]);
+$server-&gt;addFunction("add");
+$server-&gt;handle();
+</code></div></div></pre>
+<hr/>
+<pre><div><div><div><div></div></div></div><div><code>if ($_SERVER['REQUEST_METHOD'] === 'GET' &amp;&amp; $_GET['action'] === 'sum') {
+  $a = intval($_GET['a']);
+  $b = intval($_GET['b']);
+  echo json_encode(['result' =&gt; $a + $b]);
+}
+</code></div></div></pre>
+<hr/>
+<pre><div><div><div><div></div></div></div><div><code>if ($_GET['action'] === 'courses') {
+    $userId = $_GET['userid'];
+    $data = getUserCourses($userId);
+    echo json_encode($data);
+}
+</code></div></div></pre>
+<hr/>
+<pre><div><div><div><div></div></div></div><div><code>$app-&gt;get('/courses/{userid}', function ($req, $res, $args) {
+    $data = getUserCourses($args['userid']);
+    return $res-&gt;withJson($data);
+});
+</code></div></div></pre>
+<hr/>
+<pre><div><div><div><div></div></div></div><div><code>const [courses, setCourses] = useState([]);
+
+useEffect(() =&gt; {
+  fetch("https://example.com/api/courses?userid=42&amp;token=abc123")
+    .then(res =&gt; res.json())
+    .then(setCourses);
+}, []);
+</code></div></div></pre>
+<hr/>
+<pre><div><div><div><div></div></div></div><div><code>while ($row = $db-&gt;fetch()) {
+   echo "&lt;tr&gt;&lt;td&gt;{$row['name']}&lt;/td&gt;&lt;/tr&gt;";
+}
+</code></div></div></pre>
+
+</body>
+</html>
