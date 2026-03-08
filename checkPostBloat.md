@@ -1,6 +1,12 @@
 # Gemini exchange related to analysis and checking of post bloat
 
-This doc captures key parts of exchanges with Gemini on analysis and checking of Blogger post bloat due to unwanted CSS and tag attributes. It also has some other comments of mine (usually in parenthesis).
+This doc is a detailed log of exchanges with Gemini on analysis and checking of Blogger post bloat due to unwanted CSS and tag attributes, followed by my work on checking post bloat for my main sw dev blog and reducing it when the bloat had crossed a threshold. The initial understanding of the bloat by Gemini and the script it provided to check for it (checkPostBloat.ps1) were not fully accurate. Later parts of this post show how our understanding of the bloat improved.
+
+[checkPostBloat.ps1](./checkPostBloat.ps1) script was intially using a live blog post URL but that had some issues due to which it now uses a file which the user has to create by copying Edit HTML contents of post in Blogger Dashboard (ground truth).
+
+[GColab/prompts.md](GColab/prompts.md) covers the prompts I gave to Google Colab AI related to extracting pre elements from original post HTML (post-orig.html), cleaning them up and then trying to auto-patch them back into PrettyHTML bloat cleanup output file (post-pretty.html). It also has some Gemini exchanges related to the Colab session. 
+
+---
 
 Related Gemini (Gem) chat: Analyzing Blog Post Bloat and Content 
 
@@ -696,7 +702,7 @@ Synchronize Tab Scrolling extension does not seem to work with Live Server VSCod
 
 Gem: That limitation is due to browser security restrictions that prevent most extensions from interacting with special URLs, including `file://` (local files) and sometimes localhost (Live Server), to protect your system's privacy. ...
 
-Me: Gives access to local files. Still the extension lists the tabs as unavailable.
+Me: Gave access to local files. Still the extension lists the tabs as unavailable.
 Tried localhost as well as 127.0.0.1 with Live Server - The tabs are available for selection in the extension. it says Sync. started but it does not synchronize scrolling. ...
 
 Me: Can you search on the web about the issues I am facing with the extension and see if you can get either a confirmation that this does not work with the extension or a solution. 

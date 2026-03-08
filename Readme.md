@@ -13,7 +13,9 @@ The section [Scan Data Processing and Payload Analysis](#scan-data-processing-an
 
 The section [Simpler Alternatives to Create Excel Spreadsheet from Raw Scan Output](#simpler-alternatives-to-create-excel-spreadsheet-from-raw-scan-output) gives some suggestion(s) for doing the above task in a simpler way.
 
-A separate document [checkPostBloat.md](./checkPostBloat.md) covers [checkPostBloat.ps1](./checkPostBloat.ps1) script which detects ChatGPT and Dark Reader CSS bloat  in a live blog post URL.
+A separate document [checkPostBloat.md](./checkPostBloat.md) covers [checkPostBloat.ps1](./checkPostBloat.ps1) script which detects ChatGPT and Dark Reader CSS bloat. This was intially using a live blog post URL but that had some issues due to which it now uses a file which the user has to create by copying Edit HTML contents of post in Blogger Dashboard (ground truth).
+
+[GColab/prompts.md](GColab/prompts.md) covers the prompts I gave to Google Colab AI related to extracting pre elements from original post HTML (post-orig.html), cleaning them up and then trying to auto-patch them back into PrettyHTML bloat cleanup output file (post-pretty.html). It also has some Gemini exchanges related to the Colab session. 
 
 The [Get-XlsxBlobStorage.ps1](./Get-XlsxBlobStorage.ps1) script helps to understand how much space Excel files were consuming across repository history. The background for this script is covered in my blog post [Git is not suitable for managing versions of Excel and Word files](https://raviswdev.blogspot.com/2026/03/git-is-not-suitable-for-managing.html). This Get-XlsxBlobStorage.ps1 script is not expected to be used further for this project's work but is being retained just in case it is useful for some other project or perhaps for this project itself in future.
 
@@ -24,7 +26,9 @@ The [Get-XlsxBlobStorage.ps1](./Get-XlsxBlobStorage.ps1) script helps to underst
 This script downloads a Blogger post and measures its payload size. It is useful for identifying posts 
 that may have unnecessary CSS (for example, due to copy-pasting rich text from Gemini chat) or other 
 similar content that may increase the post size to above 500 KB which may cause performance issues for 
-blog feed requests and slow UI responses for blog post editing in Blogger Compose.  
+blog feed requests and slow UI responses for blog post editing in Blogger Compose. 
+
+After developing another script [checkPostBloat.ps1](./checkPostBloat.ps1), we learned after some usage of it that Invoke-WebRequest seems to get filtered by Blogger server content. postsize.ps1 also uses Invoke-WebRequest to get the post content. So it is possible that postsize.ps1 may also be getting filtered content and thus may be under-reporting the actual post size. To get the actual user-created/user-edited post size, the best measure is a count of Edit HTML content in Blogger Dashboard. postsize.ps1 perhaps is still useful for getting a relative measure of post size across posts and to identify the larger posts which are more likely to have bloat. 
 
 ### Implementation Notes
 Blogger feeds and Blogger API do not provide size metadata for blog posts.
@@ -195,7 +199,7 @@ Given below are the steps taken by the user to transform the raw scan output int
 ### 5. Template Overhead Analysis
 
 * The user performed a comparative analysis using the lowest size entry found in the Scan (**109.28 KB**).
-* By running a separate [scrape-blogger-post](https://github.com/ravisiyer/scrape-blogger-post) utility on that post, it was determined the actual user-created post content in Blogger was only **1.82 KB** (size on disk for output file is 4 KB).
+* By running a separate [scrape-blogger-post](https://github.com/ravisiyer/scrape-blogger-post) utility on that post, it was determined the actual user-created post content in Blogger was only **1.82 KB** (size on disk for output file is 4 KB). *[8 Mar 2026 Update: We learned that PowerShell Invoke-WebRequest seems to get content which is filtered by Blogger server. scrape-blogger-post utility may also be getting similar filtered content. To get the actual user-created/user-edited post size, the best measure is a count of Edit HTML content in Blogger Dashboard.]*
 * This experiment allowed the user to calculate that the fixed overhead for the blog template (headers, footers, and CSS) is approximately **107 KB** per post (109.28 - 1.82 = 107.46).
 * A later comparison for a recent post: https://raviswdev.blogspot.com/2026/03/identifying-blogger-blog-posts-with.html gives this data:
   - `postsize.ps1` output: Size:   111.92 KB (Calculated via RawContentLength header)

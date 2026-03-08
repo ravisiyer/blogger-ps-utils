@@ -1,4 +1,8 @@
-## Prompts given to Google Colab on 7 Mar 2026 and some Gemini exchanges 
+## Using Google Colab to handle pre elements issue of PrettyHTML post bloat cleanup
+
+This doc covers the prompts I gave to Google Colab AI related to extracting pre elements from original post HTML (post-orig.html), cleaning them up and then trying to auto-patch them back into PrettyHTML bloat cleanup output file (post-pretty.html). It also has some Gemini exchanges related to the Colab session. 
+
+Most of this work was done on 7 Mar 2026. But documentation update got done a little later.
 
 Notebook name: Blogger_Cleanup.ipynb
 
