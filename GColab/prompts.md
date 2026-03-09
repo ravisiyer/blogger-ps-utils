@@ -325,3 +325,12 @@ You have the 9 clean fragments and the consolidated `blogger_cleanup.py` script.
 
 **Would you like me to help you refine your `prompts.md` file one last time to include the "Lessons Learned" from the Colab AI's patching failure, so you have a complete SOP for next time?**
 
+---
+
+10 Mar 2026
+
+Related Gemini chat: Organizing Colab Notebooks and VSCode support for ColabMerging Files, https://gemini.google.com/app/f348a57452b21c2c?hl=en-IN
+
+Added comments to Blogger_Cleanup.ipynb and organized the code and text cells in two sections. First section which was successful is for extracting pre elements from post-orig.html and creating cleaned pre fragments file. Second section is the failed attempt to patch the cleaned pre fragments into post-pretty.html. I am retaining it for any future reference needs.
+
+Downloaded Blogger_Cleanup.ipynb to local project folder GColab. It is viewable in VSCode with a user interface that is similar to Google Colab on web. Also as I installed Jupyter, Python and Colab VSCode extensions, Gemini said that I can even run the notebook code cells using local Python or using Colab remote server. Colab remoter server will need file upload or Google Drive mounting. As of now, I am not interested in running it locally or on Colab remote server. I just wanted to have the consolidated code file and the notebook file in my git local repo as well as on GitHub remote repo.
