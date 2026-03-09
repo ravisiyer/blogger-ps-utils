@@ -1115,7 +1115,7 @@ Finally it got done.
 
 After conversion including update in Blogger, with converted Blogger post HTML in post-orig.html
 
-function cpb { & "C:\Users\ravi-user\CurrProj\Others\PS-Others\Blogger\checkPostBloat.ps1" @args }
+function cpb { & "...\Blogger\checkPostBloat.ps1" @args }
 
 TempHTML> cpb
 
@@ -1371,3 +1371,255 @@ Since any cleanup option in PrettyHTML seems to trigger this behavior, your curr
 
 Would you like me to help you adjust your Python script to automatically "protect" these tags by temporarily replacing them with a placeholder (like `{{CODE_BLOCK_1}}`) before running any other cleanup tools?
 
+---
+
+16:46, 09 March 2026
+
+New Gemini chat: Improvements in post size utils
+
+Added [savepostasfile.ps1](./savepostasfile.ps1) which uses same Invoke-WebRequest PowerShell command as [postsize.ps1](./postsize.ps1), but saves the response as a file.
+
+This allows us to check the actual contents returned by Invoke-WebRequest when we want.
+
+In run output below spaf is an alias to savepostasfile.ps1 and psz is an alias to postsize.ps1 (which are in different folder from where the commands are run):
+
+TempHTML> spaf https://raviswdev.blogspot.com/2026/03/about-using-dark-reader-extension-while.html savepostoutput2.html
+
+Post saved to savepostoutput2.html
+
+TempHTML> psz https://raviswdev.blogspot.com/2026/03/about-using-dark-reader-extension-while.html
+
+----------------------------------------------------
+
+URL:    https://raviswdev.blogspot.com/2026/03/about-using-dark-reader-extension-while.html
+
+Size:   129.29 KB (Calculated via RawContentLength header)
+
+TempHTML> 
+
+--------
+
+savepostoutput2.html Properties -> Size: 129 KB (1,32,401 bytes)
+
+132401/1024 = 129.297851563
+
+So postsize.ps1 report size matches same post URL saved as file by savepostasfile.ps1.
+
+TempHTML> scrape-blogger-post.ps1 https://raviswdev.blogspot.com/2026/03/about-using-dark-reader-extension-while.html
+
+Successfully saved blog post content to about-using-dark-reader-extension-.html
+
+TempHTML>
+
+about-using-dark-reader-extension-.html Properties -> Size: 3.28 KB (3,366 bytes)
+
+3366/1024 = 3.287109375
+
+I copy-pasted the post's Blogger Dashboard 'Edit HTML' content to edit-html.html
+
+edit-html.html Properties -> Size: 2.61 KB (2,675 bytes)
+
+The differences between about-using-dark-reader-extension-.html and edit-html.html are:
+
+- about-using-dark-reader-extension-.html is a proper HTML document with a minimal HTML header element as well as a body element which has a header h1 element with the blog post title at the top.
+- The top level div of about-using-dark-reader-extension-.html is almost the same as edit-html.html. Only difference is:
+  - about-using-dark-reader-extension-.html has `<br>` whereas edit-html.html has `<br />`
+  - Other than that, no differences.
+
+So scrape-blogger-post.ps1 downloaded file size is only slightly more (around 700 bytes) than Blogger Dashboard 'Edit HTML' content size.
+
+scrape-blogger-post.ps1 can also be invoked with an option to save only the post's HTML content. See Readme of https://github.com/ravisiyer/scrape-blogger-post which explains the options provided by the underlying Javascript program. https://github.com/ravisiyer/scrape-blogger-post/blob/main/scrapeBlogPost.js is the main code for scrape-blogger-post. It uses Node.js, axios, cheerio, and yargs to scrape a Blogger post.
+
+scrape-blogger-post.ps1 -f pure https://raviswdev.blogspot.com/2026/03/about-using-dark-reader-extension-while.html -o pure-about-using-dark-reader-extension-.html 
+
+Successfully saved blog post content to pure-about-using-dark-reader-extension-.html
+
+TempHTML>
+
+pure-about-using-dark-reader-extension-.html Properties -> Size: 2.60 KB (2,671 bytes)
+
+The differences between pure-about-using-dark-reader-extension-.html and edit-html.html are:
+- pure-about-using-dark-reader-extension-.html has a blank line at top and bottom.
+- pure-about-using-dark-reader-extension-.html has `<br>` whereas edit-html.html has `<br />`
+- Other than that, no differences.
+
+So downloaded file size of scrape-blogger-post.ps1 used with -f pure option is much closer to Blogger Dashboard 'Edit HTML' content size than scrape-blogger-post.ps1 used without -f pure (default is -f full).
+
+'scrape-blogger-post.ps1 -f pure' followed by URL parameter but without specifying an output parameter, writes the output to console. So it can be used with a pipe to a character count program to get the post HTML size in KB. 
+
+I don't want to invest the time now in modifying scrape-blogger-post JS program to add a size reporting feature in it.
+
+------
+
+I shared above log with Gemini (Gem).
+
+Gem: It is clear that you have performed a thorough validation of your tools today, confirming that your PowerShell scripts and your Node.js-based scraper provide consistent data.
+
+The log demonstrates that `postsize.ps1` is highly accurate for measuring the total "bloat" (129.29 KB), while your `-f pure` option in `scrape-blogger-post.ps1` successfully isolates the core content, bringing the size down to 2.60 KB—nearly identical to the Blogger Dashboard's Edit HTML view.
+
+### Comparison of Measurement Methods
+
+Based on your logs from March 9, 2026, here is how the different methods compare for the same blog post:
+
+| Method / Tool | File Size | Notes |
+| --- | --- | --- |
+| `postsize.ps1` (Live URL) | **129.29 KB** | Includes all Blogger theme overhead, scripts, and CSS. |
+| `savepostasfile.ps1` | **129.29 KB** | Matches `postsize.ps1` exactly; captures full HTTP response. |
+| `scrape-blogger-post.ps1` (Default) | **3.28 KB** | A proper HTML document with minimal headers/title. |
+| `scrape-blogger-post.ps1` (`-f pure`) | **2.60 KB** | Pure post content; differs from Dashboard only by `<br>` vs `<br />`. |
+| Blogger Dashboard (Edit HTML) | **2.61 KB** | The manual baseline for the actual content you authored. |
+
+### Observations on Tool Accuracy
+
+* **Consistency:** Your calculation (132401 / 1024) confirms that `postsize.ps1` accurately reflects the file size on disk.
+* **Markup Differences:** You correctly identified that the scraper converts XHTML-style self-closing tags (`<br />`) to standard HTML5 `<br>` tags. This is likely due to the **Cheerio** library's default parsing behavior in your JavaScript code.
+* **Efficiency:** Using `scrape-blogger-post.ps1 -f pure` without an output parameter to pipe into a character count is an excellent "quick-and-dirty" way to measure content size without changing your JS source code.
+
+### Potential Next Step
+
+Since you mentioned using a pipe to a character count program for size reporting, would you like me to help you write a small **PowerShell wrapper** or **alias** that pipes that "pure" output into a byte-count utility to give you an immediate KB report?
+
+------------
+
+Me: Yes to last question.
+
+...
+
+Me: 
+1. I need a script that I can run from command line - You have provided a function.
+2. Drop the message when size is > 50 KB
+
+...
+
+Me: I made some changes to the script including changing its name. Uploaded changed version to you. 
+
+Run output:
+
+.\scrapePurePostSize.ps1 https://raviswdev.blogspot.com/2026/03/about-using-dark-reader-extension-while.html
+
+----------------------------------------------------
+
+URL:        https://raviswdev.blogspot.com/2026/03/about-using-dark-reader-extension-while.html
+
+Scraped Pure Post Size:  2.61 KB
+
+----
+
+Gem: ...
+
+The run output you shared (2.61 KB) perfectly matches the Blogger Dashboard 'Edit HTML' size (2.61 KB) from your logs. This confirms that the -f pure flag combined with your PowerShell byte-count logic provides a highly accurate representation of the actual content size without the platform's overhead.
+
+...
+
+Me: In this case, we can conclude that Blogger theme overhead is around 126 KB.
+
+Gem: ...
+
+Using the data you gathered for the specific post "About using Dark Reader extension while...":
+
+- Total Live Size (postsize.ps1): 129.29 KB
+- Pure Content Size (scrapePurePostSize.ps1): 2.61 KB
+- Calculated Overhead: 126.68 KB
+...
+
+Me: So a threshold of 300 KB I have for PowerShell Invoke-WebRequest reported size (full post size) used through postsize.ps1 script, beyond which I should check for possibility of cleanup of unwanted CSS to reduce any post bloat, would translate to an around 175 KB threshold of 'Edit HTML' pure post size. Am I right?
+
+...
+
+Me: Oh! The post I used for above log is tiny. Some of my posts are very long.
+
+Before unwanted CSS cleanup I did recently, for https://raviswdev.blogspot.com/2026/01/notes-on-creating-stripped-down-nextjs.html postsize.ps1 reported size of: 564.47 KB.
+
+Now (after cleanup):
+
+.\postsize.ps1 https://raviswdev.blogspot.com/2026/01/notes-on-creating-stripped-down-nextjs.html
+
+----------------------------------------------------
+
+URL:    https://raviswdev.blogspot.com/2026/01/notes-on-creating-stripped-down-nextjs.html
+
+Size:   369.31 KB (Calculated via RawContentLength header)
+
+----
+
+.\scrapePurePostSize.ps1 https://raviswdev.blogspot.com/2026/01/notes-on-creating-stripped-down-nextjs.html 
+
+----------------------------------------------------
+
+URL:        https://raviswdev.blogspot.com/2026/01/notes-on-creating-stripped-down-nextjs.html
+
+Scraped Pure Post Size:  238.21 KB
+
+----
+
+So my threshold figure of 300 KB for full post size is good. I just want you to confirm that based on today's log, that would mean an around 175 KB threshold of 'Edit HTML' pure post size.
+
+Gem: Based on your new data for the longer post, your logic is much clearer. You are looking for a "rule of thumb" to estimate when the platform overhead plus your content will cross your **300 KB** total limit.
+
+### Verifying the Math
+
+Using the data from your latest test on the "Next.js" post:
+
+* **Total Size:** 369.31 KB
+* **Pure Size:** 238.21 KB
+* **Difference (Overhead):** **131.1 KB**
+
+If we compare this to your "tiny" post from earlier:
+
+* **Tiny Post Overhead:** ~126.68 KB
+* **Next.js Post Overhead:** ~131.1 KB
+
+The platform overhead appears relatively stable (between **126 KB and 131 KB**), regardless of the post length.
+
+### Confirming Your Threshold
+
+If your goal is to stay under **300 KB** total:
+
+
+$$300\text{ KB (Total)} - 125\text{ KB (Estimated Overhead)} = 175\text{ KB (Pure Content)}$$
+
+**Yes, you are right.** Given that the Blogger theme overhead is consistently around **125–130 KB**, a **170–175 KB** *[Ravi: Slightly edited]* threshold for your "Edit HTML" (Pure) content is exactly where you would expect to hit a **300 KB** total payload.
+
+### Observation on the "Next.js" Post
+
+Your "Next.js" post is currently at **238.21 KB** (Pure), which explains why it is well over your **300 KB** total limit (clocking in at **369.31 KB**). Even after your cleanup, this specific post is quite large for a single HTML document.
+
+If you find that `scrapePurePostSize.ps1` reports anything over **175 KB**, you can be almost certain that `postsize.ps1` will report over **300 KB**.
+
+Would you like me to update `scrapePurePostSize.ps1` to include a warning line specifically when the size exceeds **175 KB**?
+
+--------------
+
+Me: Even on my 4G mobile network (used on PC via mobile hotspot), https://raviswdev.blogspot.com/2026/01/notes-on-creating-stripped-down-nextjs.html loads quickly. So I think 350 to 400 KB blog post (no inline images; only text) is not an issue from user/reader point of view. What do u say?
+
+Gem: From a reader's perspective on a 4G network, you are correct that a **350 KB to 400 KB** total page size is generally considered very lightweight by modern web standards.
+
+### Why it feels fast to you
+
+Even though you are using a mobile hotspot, several factors make this size comfortable for your readers:
+
+* **Network Capacity:** A typical 4G connection in India provides speeds ranging from **5 Mbps to 20 Mbps**. A 400 KB page (which is roughly **3.2 Megabits**) should technically download in less than half a second under ideal conditions.
+* **Text-Only Efficiency:** Since your posts are text-heavy and contain no inline images, the browser doesn't have to wait for large binary files to render. Text compresses extremely well during transit (via Gzip or Brotli), so the actual amount of data traveling over your 4G connection is likely much smaller than the **369.31 KB** reported by `postsize.ps1`.
+* **Browser Rendering:** Modern browsers can start rendering the text of your post as soon as the initial HTML arrives, even if some of that **130 KB** of platform "bloat" (like tracking scripts or non-critical CSS) is still loading in the background.
+
+### Putting your size in context
+
+To give you a benchmark, the average web page size in 2024–2025 often exceeds **2,000 KB (2 MB)** due to heavy images, video players, and advertisement scripts.
+
+| Content Type | Total Size | User Experience (4G) |
+| --- | --- | --- |
+| **Your Longest Posts** | **350–400 KB** | **Excellent / Fast** |
+| Average Modern Webpage | 2,000+ KB | Standard / Acceptable |
+| Heavy News Sites | 5,000+ KB | Noticeable Delay |
+
+### The "Clean" Advantage
+
+By performing the cleanup you mentioned, you've ensured that the **238.21 KB** of pure content is high-value text rather than hidden, redundant CSS "junk." While you could technically push your threshold higher, keeping it around **400 KB** total (or **270 KB** pure content) is a very disciplined approach for a retired software consultant who values performance.
+
+You've essentially built a "high-performance" blog by accident simply by focusing on text and keeping an eye on those thresholds.
+
+Would you like me to create a small "Health Check" script that summarizes the **Content-to-Bloat Ratio** to help you decide if a specific post needs further cleanup?
+
+Me: Good exchange. While the calculations are straightforward, there are so many variations that I felt it best to get it validated through you. Now I think I have a grip on this post bloat matter. As covered in detail in a previous chat with you, I got into this post bloat matter few days back due to a 1.5 MB blog post having ton of unwanted Gemini chat rich text classes and Dark reader unwanted CSS which not only loaded slowly (till spinner stopped), but was very cumbersome to edit in Blogger.
+
+So now i wanted to have some threshold figures and tools to check whether my posts are crossing those figures. It was good to get it validated from you before I fix the threshold numbers and then move on to regular work (post bloat stuff has been a diversion).
