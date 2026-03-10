@@ -1,19 +1,19 @@
 # Blogger Blog Post Size Utility Scripts
 
 These utility PowerShell scripts are designed to help measure the payload size of individual Blogger posts 
-and to automate the process of scanning multiple posts of a blog for size analysis. The main goal is to 
+and to automate the process of getting size data for multiple posts of a blog. The main use case is to 
 identify posts that may have excessive content (such as unnecessary CSS) that could lead to performance 
-issues in Blogger feeds and Blogger Compose Post editing interface.
+issues in Blogger feeds and Blogger Compose Post editing interface. Once identified, attempts can be made to remove unnecessary CSS from such posts by using HTML cleaning utilities like [prettyhtml.com](https://prettyhtml.com).
 
-The scripts are:
-1. [postsize.ps1](#postsizeps1): Measures the size of a single Blogger post given its URL.
-2. [postsInListSize.ps1](#postsinlistsizeps1): Parses a local HTML file containing a list of Blogger post URLs (in a particular format) and invokes `postsize.ps1` for each URL to generate a comprehensive report of sizes for all posts in the list.
+The main size related scripts are:
+1. [postsize.ps1](#postsizeps1): Measures the full post size including Blogger theme, of a single Blogger post given its URL.
+2. [postsInListSize.ps1](#postsinlistsizeps1): Parses a text file containing a list of Blogger post URLs and invokes a specified script (`postsize.ps1` by default) for each URL to generate a comprehensive report of sizes for all posts in the list.
+3. [SimplifyBlogPostsList.ps1](#SimplifyBlogPostsList.ps1): Extracts blog post URLs from an HTML file by searching for href attributes and produces output text file with one URL per line. The latter file can be used as input to `postsInListSize.ps1`. 
+4. [PostsSizeListReportToCSV.ps1](./PostsSizeListReportToCSV.ps1): Transforms the output file of `postsInListSize.ps1` into a CSV format suitable for Excel.
 
-The section [Scan Data Processing and Payload Analysis](#scan-data-processing-and-payload-analysis) details the steps taken to transform the comprehensive report (raw scan output) of postsInListSize.ps1 for one particular Blogger blog into an Excel workbook with one sheet having sorted list of posts in descending order of post size. But these steps were quite cumbersome and time-consuming.
+The section [Commands Sequence to Get Size Data of List of Posts](#commands-sequence-to-get-size-data-of-list-of-posts) shows how to combine above scripts to get size data for a list of posts of a blog.
 
-The section [Simpler Alternatives to Create Excel Spreadsheet from Raw Scan Output](#simpler-alternatives-to-create-excel-spreadsheet-from-raw-scan-output) gives some suggestion(s) for doing the above task in a simpler way.
-
-A separate document [checkPostBloat.md](./checkPostBloat.md) covers [checkPostBloat.ps1](./checkPostBloat.ps1) script which detects ChatGPT and Dark Reader CSS bloat. This was intially using a live blog post URL but that had some issues due to which it now uses a file which the user has to create by copying Edit HTML contents of post in Blogger Dashboard (ground truth).
+A separate document [checkPostBloat.md](./checkPostBloat.md) covers [checkPostBloat.ps1](./checkPostBloat.ps1) script which detects ChatGPT and Dark Reader CSS bloat. This was intially using a live blog post URL but that had some issues due to which it now uses a file which the user has to create by copying Edit HTML contents of post in Blogger Dashboard. However, this script is not very accurate. The clear idea of post bloat comes from the extent to which [prettyhtml.com](https://prettyhtml.com) cleaner is able to reduce the HTML size.
 
 The above document also covers few additional scripts developed later on:
 - [savepostasfile.ps1](./savepostasfile.ps1): Downloads a Blogger post using same approach used by postsize.ps1 of Invoke-WebRequest and saves it as a local file. This is useful to check the actual content returned by Invoke-WebRequest for a post URL when we want. Note that postsize.ps1 only reports the size and does not save the content. 
@@ -23,13 +23,12 @@ The document [checkPostBloat.md](./checkPostBloat.md) is also a detailed log of 
 
 [GColab/prompts.md](GColab/prompts.md) covers the prompts I gave to Google Colab AI related to extracting pre elements from original post HTML (post-orig.html), cleaning them up and then trying to auto-patch them back into PrettyHTML bloat cleanup output file (post-pretty.html). It also has some Gemini exchanges related to the Colab session. 
 
-The [Get-XlsxBlobStorage.ps1](./Get-XlsxBlobStorage.ps1) script helps to understand how much space Excel files were consuming across repository history. The background for this script is covered in my blog post [Git is not suitable for managing versions of Excel and Word files](https://raviswdev.blogspot.com/2026/03/git-is-not-suitable-for-managing.html). This Get-XlsxBlobStorage.ps1 script is not expected to be used further for this project's work but is being retained just in case it is useful for some other project or perhaps for this project itself in future.
 
 ---
 
 ## postsize.ps1
 
-This script downloads a Blogger post and measures its payload size. It is useful for identifying posts 
+[This script](./postsize.ps1) downloads a Blogger post and measures its payload size. It is useful for identifying posts 
 that may have unnecessary CSS (for example, due to copy-pasting rich text from Gemini chat) or other 
 similar content that may increase the post size to above 500 KB which may cause performance issues for 
 blog feed requests and slow UI responses for blog post editing in Blogger Compose. 
@@ -89,29 +88,21 @@ Size:   177.29 KB (Calculated via RawContentLength header)
 
 ## postsInListSize.ps1
 
-This script automates the measurement of size of multiple blog posts by parsing a local HTML list of posts file (typically `PostsList.html`) and invoking `postsize.ps1` for each identified URL. This results in a comprehensive report of sizes for all posts in the list, which can be used to identify posts that may have excessive content and are candidates for optimization.
+[This script](./postsInListSize.ps1) automates the measurement of size of multiple blog posts by parsing a text file containing a list of Blogger post URLs and invokes a specified script (`postsize.ps1` by default) for each URL to generate a comprehensive report of sizes for all posts in the list. This report can be used to identify posts that may have excessive content and are candidates for optimization.
 
-The local HTML list of posts file is expected to be created through my [BloggerAllPostsLister web app](https://ravisiyer.github.io/BloggerAllPostsLister/?blog=https://raviswdev.blogspot.com/). After the list of posts for a Blogger blog is dynamically generated by the web app, you can click on the 'Save as HTML' button to download the posts list HTML file, which serves as the input for `postsInListSize.ps1`.
+This script was changed in a big way on 10 Mar 2026 to get split into two scripts: [SimplifyBlogPostsList.ps1](#SimplifyBlogPostsList.ps1) and this script with more focused functionality.
 
-`20260301-raviswdev-Posts-list.html` is an example of such a file that I have created for the default raviswdev blog on 1 March 2026. I later made a copy of this file and named it as `PostsList.html`.
-
-Gemini studied the structure of this HTML file and implemented a regular expression to extract post URLs by identifying the `post-item` class containers.
-
-### Key Features
-
-* **Targeted Scanning**: Extracts only the URLs belonging to a specific blog domain to avoid processing external links.
-* **Flexible Inputs**: Supports custom blog URLs and different source HTML list files via parameters.
-* **Scan Logging**: Fully compatible with `Tee-Object` to create timestamped reports of blog health.
+Many of the data files currently (as of 10 Mar 2026) in the project were created by earlier version of the script. Please refer to older version of this Readme for documentation related to them.
 
 ### Parameters
 
-* **`-BlogBaseUrl`**: The home URL of the Blogger blog. (Default: `https://raviswdev.blogspot.com`).
-* **`-PostListFile`**: The HTML file containing the post list. (Default: `PostsList.html`).
+* **`-UrlListFile`**: The file with list of URLs (Default: `CleanUrlsList.txt`).
+* **`-ScriptToRun`**: The script to run for each URL, passing the URL as a parameter (Default: `postsize.ps1`).
 * **`-All`**: A switch to scan the entire list. Without this, the script performs a first 10-posts "Test Run".
 
 ### Example Usage
 
-#### 1. Standard Scan (Default Blog)
+#### 1. Standard Scan 
 
 To run a full scan of the default blog and save the output:
 
@@ -127,21 +118,42 @@ Quickly verify connectivity and formatting without a full scan:
 .\postsInListSize.ps1
 ```
 
-#### 3. Scanning a Different Blog
+---
 
-*`Note that the code seems to cater to this use case but this use case has not been tested.`*
+## SimplifyBlogPostsList.ps1
 
-To scan another blog:
+Extracts blog post URLs from an HTML file by searching for href attributes and produces output text file with one URL per line. This is useful for creating the input file for `postsInListSize.ps1` from the HTML list of posts file generated by my [BloggerAllPostsLister web app](https://ravisiyer.github.io/BloggerAllPostsLister/?blog=https://raviswdev.blogspot.com/). It is a generic script that looks only for href attributes and thus can be used for extracting URLs from any HTML file, not just the Blogger posts list HTML file. But the href attribute has to be provided in a single line.
 
-```powershell
-.\postsInListSize.ps1 -BlogBaseUrl "https://ravisiyer.blogspot.com" -All
-```
+### Example Usage
 
-### Measurement Logic
+> `./SimplifyBlogPostsList.ps1` -InputFile `PostsList.html` -OutputFile `CleanUrlsList.txt` -BlogBaseUrl `https://raviswdev.blogspot.com`
 
-The script uses a regular expression to find `post-item` classes within your local HTML file. It then passes these URLs to `postsize.ps1`, which calculates the size based on the `RawContentLength` header or a manual UTF8 byte count.
+## Commands Sequence to Get Size Data of List of Posts
+
+1. Create input text file having list of blog post URLs.
+   - For a full blog, [BloggerAllPostsLister web app](https://ravisiyer.github.io/BloggerAllPostsLister/?blog=https://raviswdev.blogspot.com/) output file can be provided as input to `SimplifyBlogPostsList.ps1` to produce the needed input text file with list of URLs.
+   - For an arbitrary list of posts in a blog, you simply need to create a text file with that list of URLs.
+2. Run `postsInListSize.ps1` with above list of blog post URLs text file as input. Note that it will invoke `postsize.ps1` by default for each URL in the input file.
+   - Example command: `.\postsInListSize.ps1 -UrlListFile SwDevBlogURLs.txt -All | Tee-Object -FilePath "SwDevBlogSizeReport.txt"`
+3. Run `PostsSizeListReportToCSV.ps1` to transform the output file of `postsInListSize.ps1` into a CSV format suitable for Excel.  
+   - Example command: `./PostsSizeListReportToCSV.ps1 -InputFile SwDevBlogSizeReport.txt -OutputFile SwDevBlogSizeReport.csv`
+4. `SwDevBlogSizeReport.csv` can be imported into an Excel workbook `SwDevBlogSizeReport.xlsx`. A copy can be made of the sheet so that you have a 'Raw Data' worksheet and a 'Sorted Data' worksheet with the latter having the rows in descending order of Size column value.    
+
+## Author and Acknowledgements
+
+These scripts were developed by Ravi S. Iyer using assistance of Gemini in few Gemini chats in late Feb / early Mar 2026.
 
 ---
+
+---
+
+# Older versions related
+
+The sections below may still have useful information on how some of the data files in the project were created and also about the initial analysis of the scan data.
+
+The section [Scan Data Processing and Payload Analysis](#scan-data-processing-and-payload-analysis) details the steps taken to transform the comprehensive report (raw scan output) of postsInListSize.ps1 for one particular Blogger blog into an Excel workbook with one sheet having sorted list of posts in descending order of post size. But these steps were quite cumbersome and time-consuming.
+
+The section [Simpler Alternatives to Create Excel Spreadsheet from Raw Scan Output](#simpler-alternatives-to-create-excel-spreadsheet-from-raw-scan-output) gives some suggestion(s) for doing the above task in a simpler way.
 
 ## Scan Data Processing and Payload Analysis
 
@@ -228,7 +240,4 @@ Given below are the steps taken by the user to transform the raw scan output int
 
 ---
 
-## Author and Acknowledgements
-
-These scripts were developed by Ravi S. Iyer using assistance of Gemini in chat with title: `Blogger Feed Request Issue`
-in late Feb / early Mar 2026.
+The [Get-XlsxBlobStorage.ps1](./Get-XlsxBlobStorage.ps1) script helps to understand how much space Excel files were consuming across repository history. The background for this script is covered in my blog post [Git is not suitable for managing versions of Excel and Word files](https://raviswdev.blogspot.com/2026/03/git-is-not-suitable-for-managing.html). This Get-XlsxBlobStorage.ps1 script is not expected to be used further for this project's work but is being retained just in case it is useful for some other project or perhaps for this project itself in future.
