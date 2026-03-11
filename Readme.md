@@ -11,7 +11,7 @@ The main size related scripts are:
 3. [SimplifyBlogPostsList.ps1](#SimplifyBlogPostsList.ps1): Extracts blog post URLs from an HTML file by searching for href attributes and produces output text file with one URL per line. The latter file can be used as input to `postsInListSize.ps1`. 
 4. [PostsSizeListReportToCSV.ps1](./PostsSizeListReportToCSV.ps1): Transforms the output file of `postsInListSize.ps1` into a CSV format suitable for Excel.
 
-The section [Commands Sequence to Get Size Data of List of Posts](#commands-sequence-to-get-size-data-of-list-of-posts) shows how to combine above scripts to get size data for a list of posts of a blog.
+The section [Commands Sequence to Get Size Data of List of Posts](#commands-sequence-to-get-size-data-of-list-of-posts) shows how to combine above scripts to get size data for a list of posts of a blog. The related section [Example: Subset Blog Post Audit](#example-subset-blog-post-audit) covers a practical demonstration of the commands sequence to audit a subset of a live blog.
 
 A separate document [checkPostBloat.md](./checkPostBloat.md) covers [checkPostBloat.ps1](./checkPostBloat.ps1) script which detects ChatGPT and Dark Reader CSS bloat. This was intially using a live blog post URL but that had some issues due to which it now uses a file which the user has to create by copying Edit HTML contents of post in Blogger Dashboard. However, this script is not very accurate. The clear idea of post bloat comes from the extent to which [prettyhtml.com](https://prettyhtml.com) cleaner is able to reduce the HTML size.
 
@@ -139,6 +139,16 @@ Extracts blog post URLs from an HTML file by searching for href attributes and p
 3. Run `PostsSizeListReportToCSV.ps1` to transform the output file of `postsInListSize.ps1` into a CSV format suitable for Excel.  
    - Example command: `./PostsSizeListReportToCSV.ps1 -InputFile SwDevBlogSizeReport.txt -OutputFile SwDevBlogSizeReport.csv`
 4. `SwDevBlogSizeReport.csv` can be imported into an Excel workbook `SwDevBlogSizeReport.xlsx`. A copy can be made of the sheet so that you have a 'Raw Data' worksheet and a 'Sorted Data' worksheet with the latter having the rows in descending order of Size column value.    
+
+## Example: Subset Blog Post Audit
+
+A practical demonstration of the commands sequence to audit a subset of a live blog is available in the **[20260228-20260311-Posts-Size-Data](./20260228-20260311-Posts-Size-Data/)** folder which has a [README document](./20260228-20260311-Posts-Size-Data/Readme.md). This example documents a rapid health check performed on a small subset of 9 recent blog posts. 
+
+It illustrates the end-to-end process:
+   - From [using the copyashtml Chrome Bookmarklet](https://github.com/ravisiyer/bookmarklets/blob/main/stable-bml/copyashtml/README.md) to copy (as HTML) required part of the list of all posts in blog shown by [BloggerAllPostsLister web app](https://ravisiyer.github.io/BloggerAllPostsLister/?blog=https://raviswdev.blogspot.com/)
+   - To the generation of both "Full Post" and "Pure Post" size reports and final CSV transformation.
+
+---
 
 ## Author and Acknowledgements
 

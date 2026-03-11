@@ -1,3 +1,6 @@
 aitool-temp*.*
 *.xlsx
 
+# Hierarchy Agnostic: Matches 'NotInGit' folders at any level in the project 
+# (pattern without leading slash matches recursively)
+NotInGit/
