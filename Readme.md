@@ -15,14 +15,15 @@ The section [Commands Sequence to Get Size Data of List of Posts](#commands-sequ
 
 A separate document [checkPostBloat.md](./checkPostBloat.md) covers [checkPostBloat.ps1](./checkPostBloat.ps1) script which detects ChatGPT and Dark Reader CSS bloat. This was intially using a live blog post URL but that had some issues due to which it now uses a file which the user has to create by copying Edit HTML contents of post in Blogger Dashboard. However, this script is not very accurate. The clear idea of post bloat comes from the extent to which [prettyhtml.com](https://prettyhtml.com) cleaner is able to reduce the HTML size.
 
-The above document also covers few additional scripts developed later on:
+Related blog post: [Fixing Gemini/ChatGPT chat to Blogger Compose post copy-paste causing upto 1.5 MB post size bloat due to unnecessary CSS](https://raviswdev.blogspot.com/2026/03/fixing-gemini-chat-to-blogger-compose.html).  The `Summary` section at the top of the post gives a top-level view of the problem and gives the steps in the `sanitization` (cleaning) process.
+
+The [checkPostBloat.md](./checkPostBloat.md) document also covers few additional scripts developed later on:
 - [savepostasfile.ps1](./savepostasfile.ps1): Downloads a Blogger post using same approach used by postsize.ps1 of Invoke-WebRequest and saves it as a local file. This is useful to check the actual content returned by Invoke-WebRequest for a post URL when we want. Note that postsize.ps1 only reports the size and does not save the content. 
 - [scrapePurePostSize.ps1](./scrapePurePostSize.ps1): Measures the byte size of "pure" blog post HTML content using scrape-blogger-post.ps1 with -f pure option.
 
-The document [checkPostBloat.md](./checkPostBloat.md) is also a detailed log of exchanges with Gemini on analysis and checking of Blogger post bloat due to unwanted CSS and tag attributes, followed by my work on checking post bloat for my main sw dev blog and reducing it when the bloat had crossed a threshold.
+The [checkPostBloat.md](./checkPostBloat.md) document is also a detailed log of exchanges with Gemini on analysis and checking of Blogger post bloat due to unwanted CSS and tag attributes, followed by my work on checking post bloat for my main sw dev blog and reducing it when the bloat had crossed a threshold. This log includes prompts I gave to Gemini and related exchanges with Gemini, to modify some scripts and to create some scripts.
 
 [GColab/prompts.md](GColab/prompts.md) covers the prompts I gave to Google Colab AI related to extracting pre elements from original post HTML (post-orig.html), cleaning them up and then trying to auto-patch them back into PrettyHTML bloat cleanup output file (post-pretty.html). It also has some Gemini exchanges related to the Colab session. 
-
 
 ---
 
