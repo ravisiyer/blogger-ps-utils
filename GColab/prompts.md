@@ -4,7 +4,7 @@ This doc covers the prompts I gave to Google Colab AI related to extracting pre 
 
 Most of this work was done on 7 Mar 2026. But documentation update got done a little later.
 
-Notebook name: Blogger_Cleanup.ipynb
+Notebook: [Blogger_Cleanup.ipynb](./Blogger_Cleanup.ipynb) (downloaded from Google Colab and stored in project)
 
 ### Using Google Colab to create separate pre element converted fragments
 Colab does not seem to retain the prompts given to it in my earlier session in it. I had shared most of the prompts with Gemini on web and am using that chat to get the prompts given below. Also I took Gemini's help in creating most of the prompts for Colab. Related Gemini chat: Analyzing Blog Post Bloat and Content, https://gemini.google.com/app/4f74258e6dd185cd?hl=en-IN.
@@ -333,4 +333,4 @@ Related Gemini chat: Organizing Colab Notebooks and VSCode support for ColabMerg
 
 Added comments to Blogger_Cleanup.ipynb and organized the code and text cells in two sections. First section which was successful is for extracting pre elements from post-orig.html and creating cleaned pre fragments file. Second section is the failed attempt to patch the cleaned pre fragments into post-pretty.html. I am retaining it for any future reference needs.
 
-Downloaded Blogger_Cleanup.ipynb to local project folder GColab. It is viewable in VSCode with a user interface that is similar to Google Colab on web. Also as I installed Jupyter, Python and Colab VSCode extensions, Gemini said that I can even run the notebook code cells using local Python or using Colab remote server. Colab remoter server will need file upload or Google Drive mounting. As of now, I am not interested in running it locally or on Colab remote server. I just wanted to have the consolidated code file and the notebook file in my git local repo as well as on GitHub remote repo.
+Downloaded Blogger_Cleanup.ipynb to local project folder GColab - [Blogger_Cleanup.ipynb](./Blogger_Cleanup.ipynb). It is viewable in VSCode with a user interface that is similar to Google Colab on web. Also as I installed Jupyter, Python and Colab VSCode extensions, Gemini said that I can even run the notebook code cells using local Python or using Colab remote server. Colab remoter server will need file upload or Google Drive mounting. As of now, I am not interested in running it locally or on Colab remote server. I just wanted to have the consolidated code file and the notebook file in my git local repo as well as on GitHub remote repo.
