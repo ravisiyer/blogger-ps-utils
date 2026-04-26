@@ -27,6 +27,8 @@ The [checkPostBloat.md](./checkPostBloat.md) document is also a detailed log of 
 
 26 April 2026 Update: Following post captures additional learning which may alter some earlier observations made in this document: [In Dark Reader extension On state, sometimes Blogger Edit Post HTML temporarily shows Dark Reader attributes and styles](https://raviswdev.blogspot.com/2026/04/in-dark-reader-extension-on-state.html).
 
+[blogger-alias-cmds.ps1](blogger-alias-cmds.ps1) is an example PowerShell script file having aliases for some of the above commands which can be dot-sourced into current terminal session or even into user's Powershell profile.
+
 ---
 
 ## postsize.ps1
