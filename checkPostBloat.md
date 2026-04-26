@@ -8,6 +8,9 @@ This doc is a detailed log of exchanges with Gemini on analysis and checking of 
 
 Related blog post: [Fixing Gemini/ChatGPT chat to Blogger Compose post copy-paste causing upto 1.5 MB post size bloat due to unnecessary CSS](https://raviswdev.blogspot.com/2026/03/fixing-gemini-chat-to-blogger-compose.html). The `Summary` section at the top of the post gives a top-level view of the problem and gives the steps in the `sanitization` (cleaning) process.
 
+> 26 April 2026 Update: Findings from April 2026 suggest a potential correction to the conclusions in this document in March 2026 regarding Blogger's server-side sanitization. While it cannot be definitively stated that the March 2026 conclusions were completely wrong, it has been confirmed that the Blogger 'Edit HTML' window may display temporary Dark Reader attributes and styles that do not actually exist in the saved post content on the server. Consequently, the content visible in the 'Edit HTML' window cannot be viewed as a definitive representation of the post content as stored on the Blogger server. For details, please visit section of my April 2026 blog post: [Confusion about March 2026 Observations about Blogger server filtering post content](https://raviswdev.blogspot.com/2026/04/in-dark-reader-extension-on-state.html#confusion-about). Note that the earlier sections in the post demonstrate that: "In Dark Reader extension On state, sometimes Blogger Edit Post HTML temporarily shows Dark Reader attributes and styles".
+
+
 ---
 
 Related Gemini (Gem) chat: Analyzing Blog Post Bloat and Content 

@@ -25,6 +25,8 @@ The [checkPostBloat.md](./checkPostBloat.md) document is also a detailed log of 
 
 [GColab/prompts.md](GColab/prompts.md) covers the prompts I gave to Google Colab AI related to extracting pre elements from original post HTML (post-orig.html), cleaning them up and then trying to auto-patch them back into PrettyHTML bloat cleanup output file (post-pretty.html). It also has some Gemini exchanges related to the Colab session. 
 
+26 April 2026 Update: Following post captures additional learning which may alter some earlier observations made in this document: [In Dark Reader extension On state, sometimes Blogger Edit Post HTML temporarily shows Dark Reader attributes and styles](https://raviswdev.blogspot.com/2026/04/in-dark-reader-extension-on-state.html).
+
 ---
 
 ## postsize.ps1
@@ -33,6 +35,8 @@ The [checkPostBloat.md](./checkPostBloat.md) document is also a detailed log of 
 that may have unnecessary CSS (for example, due to copy-pasting rich text from Gemini chat) or other 
 similar content that may increase the post size to above 500 KB which may cause performance issues for 
 blog feed requests and slow UI responses for blog post editing in Blogger Compose. 
+
+> 26 April 2026 Update: Findings from April 2026 suggest a potential correction to the following (March 2026) conclusions regarding Blogger's server-side sanitization. While it cannot be definitively stated that the March 2026 conclusions were completely wrong, it has been confirmed that the Blogger 'Edit HTML' window may display temporary Dark Reader attributes and styles that do not actually exist in the saved post content on the server. Consequently, the content visible in the 'Edit HTML' window cannot be viewed as a definitive representation of the post content as stored on the Blogger server. For details, please visit section of my above mentioned blog post: [Confusion about March 2026 Observations about Blogger server filtering post content](https://raviswdev.blogspot.com/2026/04/in-dark-reader-extension-on-state.html#confusion-about).
 
 After developing another script [checkPostBloat.ps1](./checkPostBloat.ps1), we learned after some usage of it that Invoke-WebRequest seems to get filtered by Blogger server content. postsize.ps1 also uses Invoke-WebRequest to get the post content. So it is possible that postsize.ps1 may also be getting filtered content and thus may be under-reporting the actual post size. To get the actual user-created/user-edited post size, the best measure is a count of Edit HTML content in Blogger Dashboard. postsize.ps1 perhaps is still useful for getting a relative measure of post size across posts and to identify the larger posts which are more likely to have bloat. 
 
