@@ -13,7 +13,7 @@ The main size related scripts are:
 
 The section [Commands Sequence to Get Size Data of List of Posts](#commands-sequence-to-get-size-data-of-list-of-posts) shows how to combine above scripts to get size data for a list of posts of a blog. The related section [Example: Subset Blog Post Audit](#example-subset-blog-post-audit) covers a practical demonstration of the commands sequence to audit a subset of a live blog.
 
-> **27-28 April 2026 Update:** For a deep dive into the exact mechanics of how and why the HTML bloat occurs, refer to the [Gemini Rich Text Copy Bloat Experiment](Gem-RTCopy-Bloat\Bloat-Experiment.md) document. This covers an experiment isolating the root cause of the massive file size increases observed when copy-pasting from Gemini web chat into Blogger's WYSIWYG editor. 
+> **27-28 April 2026 Update:** For a deep dive into the exact mechanics of how and why the HTML bloat occurs, refer to the [Gemini Rich Text Copy Bloat Experiment](Gem-RTCopy-Bloat/Bloat-Experiment.md) document. This covers an experiment isolating the root cause of the massive file size increases observed when copy-pasting from Gemini web chat into Blogger's WYSIWYG editor. 
 
 > The top summary section of the document details a comparative analysis between a bloated 241 KB clipboard payload and its clean 10 KB raw DOM counterpart. It demonstrates how the browser's rich-text serialization process permanently bakes computed inline CSS and extension artifacts (such as Dark Reader variables) into the HTML. Ultimately, the findings validate the necessity of bypassing the rich-text clipboard entirely in favor of a dedicated Markdown-to-HTML conversion pipeline.
 
